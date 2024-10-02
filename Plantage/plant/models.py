@@ -21,7 +21,8 @@ class Planta(models.Model):
     necessidade_de_nutrientes = models.CharField(max_length=20) #ex: baixa, media, alta
     ciclo_de_podagem = models.IntegerField()  # Ciclo em dias, por exemplo
     ciclo_de_colheita = models.IntegerField()  # Ciclo em dias
-    canteiro = models.ForeignKey(Canteiro, on_delete=models.CASCADE)
+    canteiro = models.ForeignKey(Canteiro, on_delete=models.PROTECT)
+
     
     def __str__(self):
         return self.nome
