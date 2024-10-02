@@ -8,16 +8,21 @@
 
 ### Prioridade 1:
 -Planejamento Agrícola e Colheita: Organização e programação das atividades de plantio e colheita.
+<br>
 -Atualização de Manejo e Colheita: Monitoramento contínuo das práticas de manejo e colheita.
+<br>
 -Visualização da previsão do tempo
 
 ### Prioridade 2:
 -Relatórios e Ajustes de Colheita: Geração de relatórios para ajustes nas práticas de colheita.
+<br>
 -Planejamento de Podas de Acordo com a Lua: Estruturação das podas baseadas nas fases da lua.
 
-#### Possíveis Funcionalidades Extras:
+### Possíveis Funcionalidades Extras:
 -Percentual de Perda nas Colheitas: Cálculo e análise das perdas ocorridas durante a colheita.
+<br>
 -Rotação de Culturas e Técnicas Regenerativas de Reflorestamento: Implementação de práticas que promovem a saúde do solo e a biodiversidade.
+<br>
 -Irrigação, Previsão do Tempo e Ajuste Conforme Situação do Solo: Ajustes na irrigação com base nas condições climáticas e do solo.
 
 ## Tecnologias Utilizadas
@@ -90,13 +95,13 @@
         <img src="https://avatars.githubusercontent.com/u/126691818?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
     </a>
     <a href="https://github.com/claranevess">
-        <img src="https://avatars.githubusercontent.com/u/167437961?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
+        <img src="https://avatars.githubusercontent.com/u/166565110?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
     </a>
     <a href="https://github.com/GalileuCMMoares">
         <img src="https://avatars.githubusercontent.com/u/165906088?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
     </a>
     <a href="https://github.com/arthur15tuca">
-        <img src="https://avatars.githubusercontent.com/u/165906088?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
+        <img src="https://avatars.githubusercontent.com/u/127034386?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
     </a>
   
 </div>
