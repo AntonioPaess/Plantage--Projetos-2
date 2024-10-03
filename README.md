@@ -2,7 +2,7 @@
 
 ## Descrição
 
-**Plantage** é uma aplicação web que permite o gerenciamento completo de atividades agrícolas, oferecendo soluções para os principais desafios enfrentados por pequenos agricultores, como falta de planejamento, manejo inadequado do solo, controle de pragas e dificuldades na adoção de novas tecnologias. A ferramenta organiza as atividades, otimiza o uso de recursos e facilita o planejamento de policulturas. Adaptado para pessoas com baixo nível de instrução, o **Plantage** promove maior acessibilidade, melhorando a produtividade, sustentabilidade e competitividade das pequenas propriedades.
+**Plantage** é uma aplicação web que permite o gerenciamento eficiênte de atividades agrícolas, oferecendo soluções para os principais desafios enfrentados por pequenos agricultores, como falta de planejamento, manejo inadequado do solo, controle de pragas e dificuldades na adoção de novas tecnologias. A ferramenta organiza as atividades, otimiza o uso de recursos e facilita o planejamento de policulturas. Adaptado para pessoas com baixo nível de letramento digital, o **Plantage** promove maior acessibilidade, melhorando a produtividade, sustentabilidade e competitividade das pequenas propriedades.
 
 ## Funcionalidades
 
@@ -48,10 +48,8 @@
 
 ### Design:
 
-- [Identidade Visual](https://youtu.be/s6QeFdeu8u0)
-- [Protótipo de Baixa Fidelidade](https://watts---projeto-fds.azurewebsites.net/) 
-- [Quadro Jira]()
-- [Backlog Jira]()
+- [Identidade Visual]()
+- [Protótipo de Baixa Fidelidade]() 
 
 <br>
 
