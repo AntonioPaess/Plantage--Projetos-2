@@ -1,7 +1,9 @@
 {% extends 'layouts/blank.html' %}
 {% block content %}
 
-<h1 class="text-center py-10">Adicionar Planta</h1>
+<h1 class="text-center py-10 text-white">Adicionar Planta</h1>
+
+
 
 <form action="{% url 'add' %}" method="POST" class="flex gap-2 px-8 py--24" autocomplete="off">
     {% csrf_token %}
@@ -15,17 +17,26 @@
             <br>
             <br>
             <h2 class="text-white" for="nome">Dias para o Manejo da planta:</h2>
-            
-            
-            <input type="number" id="ciclo_de_podagem" name="ciclo_de_podagem" placeholder="Digite o numero aqui" step="1" required>
-            <br> 
+
+
+            <input type="number" id="ciclo_de_podagem" name="ciclo_de_podagem" placeholder="Digite o numero aqui"
+                step="1" required>
+            <br>
             <br>
             <h2 class="text-white" for="nome">Dias para a colheita:</h2>
-            
-            <input type="number" id="ciclo_de_colheita" name="ciclo_de_colheita" placeholder="Digite o numero aqui" step="1" required>
+
+            <input type="number" id="ciclo_de_colheita" name="ciclo_de_colheita" placeholder="Digite o numero aqui"
+                step="1" required>
             <br>
             <br>
-            
+
+            <div class="inputdiv text-black">
+                <h2 class="text-white" for="imagem">URL da Imagem:</h2>
+                <input type="url" name="imagem" id="imagem" placeholder="Digite a URL da imagem" required>
+            </div>
+            <br>
+            <br>
+
             <h2 class="text-white" for="nome">Necessidade de Nutrientes:</h2>
             <select name="necessidade_de_nutrientes" id="necessidade_de_nutrientes" required>
                 <option value="">Selecione a necessidade de Nutrientes da Planta</option>
@@ -33,6 +44,7 @@
                 <option value="Media">Média</option>
                 <option value="Alta">Alta</option>
             </select>
+
         </div>
         <br>
         <br>
@@ -47,4 +59,5 @@
 
 
 
-<!--{% endblock %}-->
+
+{% endblock %}
