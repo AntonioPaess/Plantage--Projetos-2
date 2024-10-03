@@ -21,6 +21,7 @@ class AddPlanta(View):
         nutri = request.POST.get("necessidade_de_nutrientes")
         poda=request.POST.get("ciclo_de_podagem")
         colhe= request.POST.get("ciclo_de_colheita")
+        urlImagem = request.POST.get("imagem")
 
         try:
             poda = int(poda)  # Converte para float ou use int() se preferir
@@ -62,7 +63,8 @@ class AddPlanta(View):
             nome=name,
             necessidade_de_nutrientes=nutri,
             ciclo_de_podagem=poda,
-            ciclo_de_colheita=colhe
+            ciclo_de_colheita=colhe,
+            imagem = urlImagem
         )
         planta.save()
         return redirect('home')
