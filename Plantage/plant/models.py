@@ -3,6 +3,7 @@ from django.db import models
 class Espaco(models.Model):
     nome = models.CharField(max_length=20)
     tipo_de_solo = models.CharField(max_length=50)  # Ex: solo barroso
+    quantMaxCanteiro = models.IntegerField(default = 5) # Quantidade máxima de canteiros que cabem naquele espaço
     
     def __str__(self):
         return self.nome
@@ -11,6 +12,7 @@ class Espaco(models.Model):
 class Canteiro(models.Model):
     espaco = models.ForeignKey(Espaco, on_delete=models.CASCADE)
     nome = models.CharField(max_length=20)
+    quantMaxPlant = models.IntegerField(default = 10) # Quantidade máxima de plantas que cabem naquele canteiro
     
     def __str__(self):
         return self.nome
