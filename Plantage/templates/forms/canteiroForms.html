@@ -1,0 +1,48 @@
+{% extends 'layouts/blank.html' %}
+{% block content %}
+
+
+<h1 class="text-center py-10 text-white">Adicionar Canteiro</h1>
+
+
+
+<form action="{% url 'add-canteiro' %}" method="POST" class="flex gap-2 px-8 py--24" autocomplete="off">
+    {% csrf_token %}
+
+    <div class="max-w-3xl mx-auto p--20 font-bold">
+
+
+        <h2 class="text-white" for="nome">Nome:</h2>
+        <div>
+            <input type="text" name="nome" id="nome" placeholder="Digite o nome do canteiro" required>
+            <br>
+            <br>
+            <h2 class="text-white" for="quantMaxPlant">Quantas plantas cabem neste canteiro:</h2>
+
+            <input type="number" id="quantMaxPlant" name="quantMaxPlant" placeholder="Digite o numero aqui"
+                step="1" required>
+            <br>
+            <br>
+
+            <h2 class="text-white" for="espaco">Em qual espaço seu canteiro vai ficar:</h2>
+            <div class="text-center">
+        <select class="text-center" name="espaco" id="espaco" required>
+            {% for espaco in espacos %}
+                <option value="">Selecione o Espaco</option>
+                <option value="{{ espaco.id }}">{{ espaco.nome }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+        </div>
+        <br>
+        <br>
+        <div class=" text-center">
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+    </div>
+
+</form>
+
+
+{% endblock %}

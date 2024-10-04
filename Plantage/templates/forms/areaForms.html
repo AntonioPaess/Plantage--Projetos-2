@@ -1,0 +1,50 @@
+{% extends 'layouts/blank.html' %}
+{% block content %}
+
+<h1 class="text-center py-10 text-white">Adicionar Espaco</h1>
+
+
+
+<form action="{% url 'add-espaco' %}" method="POST" class="flex gap-2 px-8 py--24" autocomplete="off">
+    {% csrf_token %}
+
+    <div class="max-w-3xl mx-auto p--20 font-bold">
+
+
+        <h2 class="text-white" for="nome">Nome:</h2>
+        <div class="">
+            <input type="text" name="nome" id="nome" placeholder="Digite o nome do espaço de plantio" required>
+            <br>
+            <br>
+            <h2 class="text-white" for="quantMaxCanteiro">Quantos canteiros cabem no espaço:</h2>
+
+            <input type="number" id="quantMaxCanteiro" name="quantMaxCanteiro" placeholder="Digite o numero aqui"
+                step="1" required>
+            <br>
+            <br>
+
+            <h2 class="text-white" for="nome">Tipo de Solo:</h2>
+            <select name="tipo_de_solo" id="tipo_de_solo" required>
+                <option value="">Selecione o tipo de solo da sua área de plantio</option>
+                <option value="Solo Arenoso">Solo Arenoso</option>
+                <option value="Solo Argiloso">Solo Argiloso</option>
+                <option value="Solo Silte">Solo Silte</option>
+                <option value="Solo Humífero">Solo Humífero</option>
+            </select>
+
+        </div>
+        <br>
+        <br>
+        <div class=" text-center">
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+    </div>
+
+</form>
+
+
+
+
+
+
+{% endblock %}
