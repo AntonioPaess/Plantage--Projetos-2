@@ -1,0 +1,44 @@
+{% extends 'layouts/blank.html' %}
+{% block content %}
+
+<main class="flex flex-col items-center justify-center max-h-[90vh] rounded-lg p-8 relative">
+    <span id="back" class="absolute top-8 left-8">
+        <a href="{% url 'list-all' %}" class="text-[#17285E]">
+            <svg class="text-white" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-arrow-left">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M16 12H8"/>
+                <path d="m12 8-4 4 4 4"/>
+            </svg>
+        </a>
+    </span>
+    
+    <div id="card" class=" flex flex-col items-center p-8 bg-white rounded-lg border-2 border-gray-300 shadow-lg">
+        <div id="title" class="mb-6">
+            <h1 class="text-black text-3xl font-bold">{{planta.nome}}</h1>
+        </div>
+        <img id="image" src="{{planta.imagem}}" alt="Imagem de {{planta.nome}}" class="w-72 h-auto rounded-lg drop-shadow-lg transition-transform duration-300 transform hover:scale-105 mb-4">
+    
+        <div id="stats" class="flex flex-col items-center  p-8 w-full">
+            <div id="text" class="flex flex-col items-center">
+                <div id="hp" class="text-2xl justify-center flex gap-5 mb-2">
+                    <span class=" stats-title font-bold">Tempo de Manejo:</span>
+                    <span class="stats-data text-black font-bold">{{planta.ciclo_de_podagem}} dias</span>
+                </div>
+                <div id="medidas" class="w-full">
+                    <div id="altura" class="text-2xl font-bold justify-center flex gap-5 mb-2">
+                        <span class="  stats-title">Tempo de Colheita:</span>
+                        <span class="stats-data text-black">{{planta.ciclo_de_colheita}} dias</span>
+                    </div>
+                    <div id="peso" class="text-2xl font-bold justify-center flex gap-5 mb-2">
+                        <span class=" stats-title">Necessidade de Nutriente:</span>
+                        <span class="stats-data text-black">{{planta.necessidade_de_nutrientes}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
+
+
