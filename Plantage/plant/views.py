@@ -142,3 +142,20 @@ class AddCanteiro(View):
                 return render(request, 'forms/canteiroForms.html', {'espacos': espacos})
 
         return render(request, 'forms/canteiroForms.html', {'espacos': espacos})
+
+class ListAllView(View):
+    def get(self, request):
+        plantas = Planta.objects.all()
+
+        ctx = {
+            'allPlantas': plantas, 
+        }
+
+        return render(request, 'visualizarTodas.html', ctx)
+
+class PlantaDetail(View):
+    def get(self, request, id):
+
+        ctx = {'planta': Planta.objects.filter(id=id).first()}
+
+        return render(request, 'visualizarPlanta.html', ctx)

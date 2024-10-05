@@ -6,5 +6,8 @@ urlpatterns = [
     path('planta/', AddPlanta.as_view(), name="add"),  
     path('area/', AddEspaco.as_view(), name="add-espaco"),
     path('canteiro/', AddCanteiro.as_view(), name="add-canteiro"),
+    path('plantalist/', ListAllView.as_view(), name="list-all"),
+    path('plant/<int:id>', PlantaDetail.as_view(), name="planta-detail"),
+    
 ]
 
