@@ -27,13 +27,22 @@ jobs:
           python -m venv venv
           source venv/bin/activate
       
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-        
-      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
+       - name: Install dependencies
+        run: pip install -r Plantage/requirements.txt
+
+      - name: Cleaning testing files
+        run: |
+          cd Plantage/
+          rm db.sqlite3
+          rm .env
+          cd ..
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: |
+          cd Plantage/
+          zip release.zip ./* -r
+          cd ..
+          mv Plantage/release.zip .
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
