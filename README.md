@@ -44,7 +44,7 @@
 - [ScreenCast - 2 Histórias]()
 - [Bug Tracking]() 
 - [BackLog](https://docs.google.com/spreadsheets/d/1ljbu1budRT9PmsQ33NYLL4nXQcchDiHaDzfqgmcfjYo/edit?usp=sharing)
-- [Relatório Pair Programming]()
+- [Relatório Pair Programming](https://docs.google.com/document/d/192hdRMBRvWtN7WSGMJpub7XyjWYUM0NZiNpqMRTOqSQ/edit?usp=sharing)
 
 ### Design:
 
