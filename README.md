@@ -48,7 +48,7 @@
 
 ### Design:
 
-- [Identidade Visual]()
+- [Identidade Visual](https://drive.google.com/file/d/1KCcf-b_AQZgs7NEQs_V3DP_UIX574vGe/view?usp=sharing)
 - [Protótipo de Baixa Fidelidade]() 
 
 <br>
