@@ -40,7 +40,7 @@
 
 #### Ciência da Computação:
 
-- [Website Azure Plants]()
+- [Website Azure Plants](https://plantage--projetos-2.azurewebsites.net/)
 - [ScreenCast - 2 Histórias]()
 - [Bug Tracking]() 
 - [BackLog](https://docs.google.com/spreadsheets/d/1ljbu1budRT9PmsQ33NYLL4nXQcchDiHaDzfqgmcfjYo/edit?usp=sharing)
@@ -48,7 +48,7 @@
 
 ### Design:
 
-- [Identidade Visual]()
+- [Identidade Visual](https://drive.google.com/file/d/1KCcf-b_AQZgs7NEQs_V3DP_UIX574vGe/view?usp=sharing)
 - [Protótipo de Baixa Fidelidade]() 
 
 <br>
