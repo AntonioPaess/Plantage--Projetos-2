@@ -33,9 +33,10 @@ jobs:
       - name: Cleaning testing files
         run: |
           cd Plantage/
-          rm db.sqlite3
-          rm .env
+          rm -f db.sqlite3
+          rm -f .env
           cd ..
+
 
       - name: Zip artifact for deployment
         run: |
