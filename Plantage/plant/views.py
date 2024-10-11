@@ -159,3 +159,6 @@ class PlantaDetail(View):
         ctx = {'planta': Planta.objects.filter(id=id).first()}
 
         return render(request, 'visualizarPlanta.html', ctx)
+
+def testeview(request):
+    return render(request, 'teste.html')

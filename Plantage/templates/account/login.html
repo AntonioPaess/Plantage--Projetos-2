@@ -2,15 +2,15 @@
 {% load i18n %}
 {% load allauth account %}
 {% block head_title %}
-    {% trans "Sign In" %}
+    {% trans "Entrar" %}
 {% endblock head_title %}
 {% block content %}
     {% element h1 %}
-        {% trans "Sign In" %}
+        {% trans "Entrar" %}
     {% endelement %}
     <p>
-        If you have not created an account yet, then please
-    <a href="{% url 'account_signup' %}?next={% url 'profile-onboarding' %}">sign up</a> first.
+        Se você ainda não criou uma conta, por favor
+    <a href="{% url 'account_signup' %}?next={% url 'profile-onboarding' %}">Cadastre-se</a> primeiro.
     </p>
     {% url 'account_login' as login_url %}
     {% element form form=form method="post" action=login_url tags="entrance,login" %}
@@ -26,7 +26,7 @@
         {% endslot %}
         {% slot actions %}
             {% element button type="submit" tags="prominent,login" %}
-                {% trans "Sign In" %}
+                {% trans "Entrar" %}
             {% endelement %}
         {% endslot %}
     {% endelement %}

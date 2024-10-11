@@ -2,31 +2,33 @@
 
 {% block content %} 
 
-<div class="text-white text-center px-4 py-24">
-    <h1>Plantage - Home</h1>
+<div class="text-white text-center mb-16 py-24">
+    <h1 class="text-4xl font-bold mb-2">Plantage</h1>
+    <p class="text-xl">Gerenciamento de Plantas e Espaços</p>
 </div>
-<div class="text-white text-center text-2xl">
-    <ul class="hoverlist">
-        <li class="inline-block"><a class="hover:bg-gradient-to-t from-lime-500 to-green-900 hover:text-black" href="{% url 'add' %}" >Forms Planta</a></li>
-    </ul>
-</div>
-<br>
-<div class="text-white text-center text-2xl">
-    <ul class="hoverlist">
-        <li class="inline-block"><a class="hover:bg-gradient-to-t from-lime-500 to-green-900 hover:text-black" href="{% url 'add-espaco' %}" >Forms Espaço</a></li>
-    </ul>
-</div>
-<br>
-<div class="text-white text-center text-2xl">
-    <ul class="hoverlist">
-        <li class="inline-block"><a class="hover:bg-gradient-to-t from-lime-500 to-green-900 hover:text-black" href="{% url 'add-canteiro' %}" >Forms canteiro</a></li>
-    </ul>
-</div>
-<br>
-<div class="text-white text-center text-2xl">
-    <ul class="hoverlist">
-        <li class="inline-block"><a class="hover:bg-gradient-to-t from-lime-500 to-green-900 hover:text-black" href="{% url 'list-all' %}" >Ver minhas plantas</a></li>
-    </ul>
+
+<div class= "flex flex-col items-center justify-center">
+<nav class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
+    <a href="{% url 'add' %}" class="flex items-center justify-center p-4 bg-white bg-opacity-10 rounded-lg text-white hover:bg-opacity-20 transition-all duration-300 ease-in-out transform hover:scale-105">
+      <i class="lucide lucide-leaf w-6 h-6"></i>
+      <span class=" text-lg">Adicionar Planta</span>
+    </a>
+    
+    <a href="{% url 'add-espaco' %}" class="flex items-center justify-center p-4 bg-white bg-opacity-10 rounded-lg text-white hover:bg-opacity-20 transition-all duration-300 ease-in-out transform hover:scale-105">
+      <i class="lucide lucide-map w-6 h-6"></i>
+      <span class=" text-lg">Forms Espaço</span>
+    </a>
+    
+    <a href="{% url 'add-canteiro' %}" class="flex items-center justify-center p-4 bg-white bg-opacity-10 rounded-lg text-white hover:bg-opacity-20 transition-all duration-300 ease-in-out transform hover:scale-105">
+      <i class="lucide lucide-home w-6 h-6"></i>
+      <span class=" text-lg">Forms Canteiro</span>
+    </a>
+    
+    <a href="{% url 'list-all' %}" class="flex items-center justify-center p-4 bg-white bg-opacity-10 rounded-lg text-white hover:bg-opacity-20 transition-all duration-300 ease-in-out transform hover:scale-105">
+      <i class="lucide lucide-list w-6 h-6"></i>
+      <span class=" text-lg">Ver Minhas Plantas</span>
+    </a>
+  </nav>
 </div>
 
 
