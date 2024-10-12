@@ -5,10 +5,16 @@ from plant.models import *
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib import messages
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
 @login_required
 def HomeView(request):
-    return render(request, 'home.html')
+    espacos = Espaco.objects.all()
+    plantas = Planta.objects.all()
+    canteiros = Canteiro.objects.all()  # Carrega todos os espaços do banco
+    return render(request, 'home.html', {'espacos': espacos, 'canteiros': canteiros, 'plantas': plantas})
+
 
 @method_decorator(login_required, name='dispatch')
 class AddPlanta(View):
@@ -99,49 +105,36 @@ class AddEspaco(View):
         return redirect('home')
 
 class AddCanteiro(View):
-    def get(self, request):
-        espacos = Espaco.objects.all()  # Carrega os espaços para o formulário
-        return render(request, 'forms/canteiroForms.html', {'espacos': espacos})
+    def get(self, request, espaco_id):
+        espaco = Espaco.objects.get(id=espaco_id)  # Carrega o espaço correspondente
+        return render(request, 'forms/canteiroForms.html', {'espaco': espaco})
 
-    def post(self, request):
-        espacos = Espaco.objects.all()  # Carrega os espaços para o caso de erro no formulário
-        if request.method == "POST":
-            name = request.POST.get("nome")
-            quantPlantMax = request.POST.get("quantMaxPlant")
-            espaco_id = request.POST.get('espaco')
+    def post(self, request, espaco_id):
+        espaco = Espaco.objects.get(id=espaco_id)  # Obtém o espaço
 
-            try:
-                # Verifica se o espaço selecionado existe
-                espaco = Espaco.objects.get(id=espaco_id)
+        name = request.POST.get("nome")
+        quantPlantMax = request.POST.get("quantMaxPlant")
 
-                # Verifica o limite de canteiros e o número atual
-                limiteCant = espaco.quantMaxCanteiro  # Pega o limite de canteiros no espaço
-                quantCanteiros = espaco.canteiro_set.count()  # Pega o total de canteiros no espaço
+        # Verifica o limite de canteiros e o número atual
+        limiteCant = espaco.quantMaxCanteiro  # Limite de canteiros no espaço
+        quantCanteiros = espaco.canteiro_set.count()  # Total de canteiros no espaço
 
-                # Verifica se ainda há espaço para um novo canteiro
-                if quantCanteiros >= limiteCant:
-                    messages.warning(request, 'O número máximo de canteiros para este espaço já foi atingido.')
-                    return redirect('add-canteiro')
+        if quantCanteiros >= limiteCant:
+            messages.warning(request, 'O número máximo de canteiros para este espaço já foi atingido.')
+            return redirect('add-canteiro', espaco_id=espaco_id)
 
-                # Verifica se a quantidade máxima de plantas no canteiro é válida
-                try:
-                    quantPlantMax = int(quantPlantMax)
-                    if quantPlantMax <= 0:
-                        raise ValueError("Os valores precisam ser números positivos.")
-                except (ValueError, TypeError):
-                    messages.warning(request, 'A quantidade de plantas no seu canteiro necessita ser um valor maior que zero.')
-                    return redirect('add-canteiro')
+        try:
+            quantPlantMax = int(quantPlantMax)
+            if quantPlantMax <= 0:
+                raise ValueError("Os valores precisam ser números positivos.")
+        except (ValueError, TypeError):
+            messages.warning(request, 'A quantidade de plantas no canteiro deve ser um valor maior que zero.')
+            return redirect('add-canteiro', espaco_id=espaco_id)
 
-                # Cria o novo canteiro
-                Canteiro.objects.create(espaco=espaco, nome=name, quantMaxPlant=quantPlantMax)
-                return redirect('home')
+        # Cria o novo canteiro
+        Canteiro.objects.create(espaco=espaco, nome=name, quantMaxPlant=quantPlantMax)
+        return redirect('home')
 
-            except Espaco.DoesNotExist:
-                # Caso o espaço não exista
-                messages.warning(request, 'Espaço inválido!')
-                return render(request, 'forms/canteiroForms.html', {'espacos': espacos})
-
-        return render(request, 'forms/canteiroForms.html', {'espacos': espacos})
 
 class ListAllView(View):
     def get(self, request):
@@ -160,5 +153,8 @@ class PlantaDetail(View):
 
         return render(request, 'visualizarPlanta.html', ctx)
 
-def testeview(request):
+
+def testeview(request): 
     return render(request, 'teste.html')
+
+

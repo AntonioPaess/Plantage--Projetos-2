@@ -98,6 +98,7 @@
         .alert-danger { @apply bg-amber-500 }
     </style>
 </head>
+
 <body class="{% block class %}{% endblock %} min-h-screen bg-gradient-to-b from-green-800 to-green-600">
 	
    {% include 'includes/messages.html' %}
@@ -111,6 +112,24 @@
    {% block layout %}
    {% endblock %}
 </body>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const H1DivInEnglish = document.querySelector('div p');
+    // Verifica se o H1 existe e se o texto é "Already have an account? Then please sign in."
+    if (H1DivInEnglish && H1DivInEnglish.innerText === "Já tem uma conta? Então, por favor, sign in.") {
+        // Altera o texto para incluir o link com innerHTML
+        H1DivInEnglish.innerHTML = 'Já tem uma conta? Então, por favor, <a href="/accounts/login/">faça login</a>.';
+    }
+});
+
+</script>
+
+   
+
 </html>
+
+
+
+
 
 
