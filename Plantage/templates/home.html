@@ -2,7 +2,7 @@
 
 {% block content %} 
 
-<main class=" gap-5 mx-auto w-11/12 p-8 ml-32">
+<main class=" gap-5 mx-auto w-11/12 p-8">
     
     <!-- Botão para adicionar novo espaço -->
     <div class= "flex flex-col items-center justify-center">
@@ -26,7 +26,7 @@
       <!-- Grid para organizar os espaços lado a lado -->
       
           {% for espaco in espacos %}
-          <div class="h-[40vh] w-[45vw] bg-[#e2b57f] shadow-lg rounded-lg overflow-hidden p-6 border-2 border-[#d1995b]">
+          <div class=" w-full bg-[#e2b57f] shadow-lg rounded-lg overflow-hidden p-6 border-2 border-[#d1995b]">
               <h2 class="text-xl font-semibold text-black">{{ espaco.nome }}</h2>
               <p class="text-gray-600 mt-2">Tipo de Solo: {{ espaco.tipo_de_solo }}</p>
               <p class="text-gray-600 mt-1">Canteiros: {{ espaco.canteiro_set.count }} / {{ espaco.quantMaxCanteiro }}</p>
@@ -38,7 +38,7 @@
                       <p>Canteiro: {{ canteiro.nome }}</p>
   
                       <!-- Botão para adicionar plantas dentro do canteiro -->
-                      <button class="mt-2 px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-700" onclick="mostrarPlantas({{ canteiro.id }})">
+                      <button class="mt-2 px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-700 hover:animate-bounce" onclick="mostrarPlantas({{ canteiro.id }})">
                           Adicionar Planta
                       </button>
   
@@ -60,8 +60,8 @@
               
               <!-- Botão de adicionar canteiro -->
               {% if espaco.canteiro_set.count < espaco.quantMaxCanteiro %}
-              <div class="mt-4">
-                  <a href="{% url 'add-canteiro' espaco.id %}" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700 transition-transform duration-300 ease-in-out transform hover:scale-105" data-espaco-id="{{ espaco.id }}">
+              <div class="mt-4 text-center py-4 hover:animate-bounce">
+                  <a href="{% url 'add-canteiro' espaco.id %}" class="shadow-lg px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700 transition-transform duration-300 ease-in-out transform hover:scale-105" data-espaco-id="{{ espaco.id }}">
                       Adicionar Canteiro
                   </a>
               </div>
