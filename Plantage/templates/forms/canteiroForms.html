@@ -4,26 +4,24 @@
 
 <h1 class="text-center py-10 text-white">Adicionar Canteiro</h1>
 
-
-
-<form action="{% url 'add-canteiro' espaco.id %}" method="POST" class="flex gap-2 px-8 py--24" autocomplete="off">
+<form action="{% url 'add-canteiro' espaco.id %}" method="POST" class="flex flex-col gap-4 px-8" autocomplete="off">
     {% csrf_token %}
     
-    <div class="max-w-3xl mx-auto p--20 font-bold">
-        <h2 class="text-white" for="nome">Nome:</h2>
-        <div>
-            <input type="text" name="nome" id="nome" placeholder="Digite o nome do canteiro" required>
-            <br><br>
-
-            <h2 class="text-white" for="quantMaxPlant">Quantidade Máxima de Plantas:</h2>
-            <input type="number" name="quantMaxPlant" id="quantMaxPlant" placeholder="Digite a quantidade máxima de plantas" required>
-            <br><br>
-        </div>
+    <div class="max-w-3xl w-[29vw] mx-auto p-4 font-bold">
+        <label for="nome" class="block text-white">Nome:</label>
+        <input type="text" name="nome" id="nome" placeholder="Digite o nome do canteiro" class="w-full mt-2 p-2 border rounded" required>
     </div>
-    
-    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-        Adicionar
-    </button>
+
+    <div class="max-w-3xl w-[29vw] mx-auto p-4 font-bold">
+        <label for="quantMaxPlant" class="block text-white">Quantidade Máxima de Plantas:</label>
+        <input type="number" name="quantMaxPlant" id="quantMaxPlant" placeholder="Digite a quantidade máxima de plantas" class="w-full mt-2 p-2 border rounded" required>
+    </div>
+
+    <div class="max-w-3xl mx-auto p-4 hover:animate-bounce">
+        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">
+            Adicionar
+        </button>
+    </div>
 </form>
 
 
