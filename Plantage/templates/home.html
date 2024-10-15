@@ -1,152 +1,189 @@
 {% extends 'layouts/blank.html' %}
 
-{% block content %} 
+{% block content %}
 
-<main class=" gap-5 mx-auto w-11/12 p-8">
-    
+<main class="gap-5 mx-auto w-11/12 p-8">
     <!-- Botão para adicionar novo espaço -->
-    <div class= "flex flex-col items-center justify-center">
-        <a href="{% url 'add-espaco' %}">
-            <div class="block add-block bg-[#e2b57f] border-2 border-[#d1995b] flex flex-col justify-center items-center h-[30vh] w-[30vw] p-8 rounded-lg transition-transform duration-300 hover:scale-105 hover:shadow-lg">
-                <span class="text-white mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus">
-                        <path d="M5 12h14"/>
-                        <path d="M12 5v14"/>
-                    </svg>
-                </span>
-                <h2 class="text-white text-xl font-semibold">Adicionar Novo Espaço</h2>
+    <a href="{% url 'add-espaco' %}">
+        <div class="block add-block flex flex-col justify-center items-center mx-auto rounded-lg transition-transform duration-300 hover:scale-105 hover:shadow-lg ml-0">
+            <span class="text-white mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-plus">
+                    <path d="M5 12h14" />
+                    <path d="M12 5v14" />
+                </svg>
+            </span>
+            <h2 class="text-white text-xl font-semibold">Adicionar Novo Espaço</h2>
+        </div>
+    </a>
+
+    <br><br>
+
+    <!-- Renderizando todos os espaços existentes -->
+<div>
+    <!-- Grid para organizar os espaços lado a lado -->
+    {% for espaco in espacos %}
+    <div class="block bg-[#e2b57f] border-2 border-[#d1995b] flex flex-col justify-between items-start mx-auto rounded-lg transition-transform duration-300 hover:scale-105 hover:shadow-lg p-4">
+        
+        <!-- Cabeçalho com nome do espaço e a seta -->
+        <div class="flex justify-between items-start w-full" onclick="toggleEspaco({{ espaco.id }})">
+            <div class="flex flex-col">
+                <h2 class="text-xl font-semibold text-black">{{ espaco.nome }}</h2>
+                <p class="text-gray-600">Tipo de Solo: {{ espaco.tipo_de_solo }}</p>
+                <p class="text-gray-600">Canteiros: {{ espaco.canteiro_set.count }} / {{ espaco.quantMaxCanteiro }}</p>
             </div>
-        </a>
+            
+            <!-- Botão de seta para alternar -->
+            <button class="bg-blue-500 p-2 rounded-lg text-white">
+                <span id="icon-{{ espaco.id }}">&#9660;</span> <!-- seta para baixo -->
+            </button>
+        </div>
+
+        <!-- Conteúdo do espaço (oculto inicialmente) -->
+        <div id="conteudo-espaco-{{ espaco.id }}" class="mt-4 w-full hidden">
+            <!-- Canteiros dentro do espaço -->
+            <div id="canteiros-{{ espaco.id }}" class="flex flex-wrap justify-center items-center gap-4 mt-4 w-full">
+                {% for canteiro in espaco.canteiro_set.all %}
+                <div class="flex flex-col items-center bg-green-500 text-white px-6 py-4 mb-4 rounded-lg w-full relative">
+                    <p class="text-xl font-bold">Canteiro: {{ canteiro.nome }}</p>
+
+                    <!-- Botão para adicionar plantas dentro do canteiro, estilo atualizado -->
+                    <a href="javascript:void(0);" onclick="mostrarPlantas({{ canteiro.id }})" class="absolute top-0 left-0">
+                        <div class="text-white flex flex-col justify-center items-center h-20 w-24 p-4 transition-transform duration-300 rounded-lg hover:shadow-xl transform hover:scale-105">
+                            <span class="text-white mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus">
+                                    <path d="M5 12h14"></path>
+                                    <path d="M12 5v14"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </a>
+
+                    <!-- Seletor para escolher a planta -->
+                    <div id="plantas-{{ canteiro.id }}" class="mt-2 w-full hidden">
+                        <select class="w-full p-2 bg-white text-black" onchange="adicionarPlanta(this, {{ canteiro.id }})">
+                            <option value="" selected disabled>Escolha uma planta</option>
+                            {% for planta in plantas %}
+                            <option value="{{ planta.id }}">{{ planta.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Div onde as plantas serão exibidas -->
+                    <div id="lista-plantas-{{ canteiro.id }}" class="mt-2 w-full"></div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Botão de adicionar canteiro -->
+            {% if espaco.canteiro_set.count < espaco.quantMaxCanteiro %}
+            <div class="mt-4 text-center py-4 hover:animate-bounce">
+                <a href="{% url 'add-canteiro' espaco.id %}" class="shadow-lg px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700 transition-transform duration-300 ease-in-out transform hover:scale-105" data-espaco-id="{{ espaco.id }}">
+                    Adicionar Canteiro
+                </a>
+            </div>
+            {% else %}
+            <div class="mt-4">
+                <span class="text-red-500">Limite de canteiros atingido</span>
+            </div>
+            {% endif %}
+        </div>
     </div>
     <br>
-    <br>
-    <!-- Renderizando todos os espaços existentes -->
-    <div>
-  
-      <!-- Grid para organizar os espaços lado a lado -->
-      
-          {% for espaco in espacos %}
-          <div class=" w-full bg-[#e2b57f] shadow-lg rounded-lg overflow-hidden p-6 border-2 border-[#d1995b]">
-              <h2 class="text-xl font-semibold text-black">{{ espaco.nome }}</h2>
-              <p class="text-gray-600 mt-2">Tipo de Solo: {{ espaco.tipo_de_solo }}</p>
-              <p class="text-gray-600 mt-1">Canteiros: {{ espaco.canteiro_set.count }} / {{ espaco.quantMaxCanteiro }}</p>
-              
-              <!-- Canteiros dentro do espaço, organizados verticalmente -->
-              <div id="canteiros-{{ espaco.id }}" class="mt-4">
-                  {% for canteiro in espaco.canteiro_set.all %}
-                  <div class="flex flex-col items-center bg-green-500 text-white p-4 mb-4 rounded-lg">
-                      <p>Canteiro: {{ canteiro.nome }}</p>
-  
-                      <!-- Botão para adicionar plantas dentro do canteiro -->
-                      <button class="mt-2 px-4 py-2 bg-blue-500 rounded-lg hover:bg-blue-700 hover:animate-bounce" onclick="mostrarPlantas({{ canteiro.id }})">
-                          Adicionar Planta
-                      </button>
-  
-                      <!-- Seletor para escolher a planta -->
-                      <div id="plantas-{{ canteiro.id }}" class="mt-2 w-full hidden">
-                          <select class="w-full p-2 bg-white text-black" onchange="adicionarPlanta(this, {{ canteiro.id }})">
-                              <option value="" selected disabled>Escolha uma planta</option>
-                              {% for planta in plantas %}
-                              <option value="{{ planta.id }}">{{ planta.nome }}</option>
-                              {% endfor %}
-                          </select>
-                      </div>
-  
-                      <!-- Div onde as plantas serão exibidas -->
-                      <div id="lista-plantas-{{ canteiro.id }}" class="mt-2 w-full"></div>
-                  </div>
-                  {% endfor %}
-              </div>
-              
-              <!-- Botão de adicionar canteiro -->
-              {% if espaco.canteiro_set.count < espaco.quantMaxCanteiro %}
-              <div class="mt-4 text-center py-4 hover:animate-bounce">
-                  <a href="{% url 'add-canteiro' espaco.id %}" class="shadow-lg px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700 transition-transform duration-300 ease-in-out transform hover:scale-105" data-espaco-id="{{ espaco.id }}">
-                      Adicionar Canteiro
-                  </a>
-              </div>
-              {% else %}
-              <div class="mt-4">
-                  <span class="text-red-500">Limite de canteiros atingido</span>
-              </div>
-              {% endif %}
-          </div>
-          <br>
-          {% endfor %}
-      </main>
-  </div>
+    {% endfor %}
+</div>
+
+</main>
+
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-      // Seleciona todos os botões de adicionar canteiro
-      document.querySelectorAll('a.add-canteiro-btn').forEach(function(button) {
-          button.addEventListener('click', function(e) {
-              e.preventDefault();  // Impede o comportamento padrão
+    document.addEventListener('DOMContentLoaded', function () {
+        // Seleciona todos os botões de adicionar canteiro
+        document.querySelectorAll('a.add-canteiro-btn').forEach(function (button) {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();  // Impede o comportamento padrão
 
-              const espacoId = this.dataset.espacoId;  // Obtém o ID do espaço
-              const url = this.href;
+                const espacoId = this.dataset.espacoId;  // Obtém o ID do espaço
+                const url = this.href;
 
-              // Simulação: pega o nome do canteiro a ser adicionado
-              const nomeCanteiro = prompt("Digite o nome do canteiro:");
+                // Simulação: pega o nome do canteiro a ser adicionado
+                const nomeCanteiro = prompt("Digite o nome do canteiro:");
 
-              if (!nomeCanteiro) {
-                  alert("Nome do canteiro é obrigatório!");
-                  return;
-              }
+                if (!nomeCanteiro) {
+                    alert("Nome do canteiro é obrigatório!");
+                    return;
+                }
 
-              // Envia os dados usando fetch
-              fetch(url, {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded',
-                      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                  },
-                  body: new URLSearchParams({
-                      nome: nomeCanteiro,
-                      quantMaxPlant: 5  // Exemplo: quantMaxPlant
-                  })
-              })
-              .then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      // Cria o novo elemento de canteiro
-                      const canteiroDiv = document.createElement('div');
-                      canteiroDiv.classList.add('flex', 'items-center', 'bg-green-500', 'text-white', 'p-2', 'rounded-lg');
-                      canteiroDiv.innerHTML = `<p>Canteiro: ${data.nome}</p>`;
+                // Envia os dados usando fetch
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: new URLSearchParams({
+                        nome: nomeCanteiro,
+                        quantMaxPlant: 5  // Exemplo: quantMaxPlant
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Cria o novo elemento de canteiro
+                            const canteiroDiv = document.createElement('div');
+                            canteiroDiv.classList.add('flex', 'items-center', 'bg-green-500', 'text-white', 'p-2', 'rounded-lg');
+                            canteiroDiv.innerHTML = `<p>Canteiro: ${data.nome}</p>`;
 
-                      // Adiciona o novo canteiro no espaço correspondente
-                      const canteirosContainer = document.getElementById(`canteiros-${data.espaco_id}`);
-                      canteirosContainer.appendChild(canteiroDiv);
-                  } else {
-                      alert(data.error);  // Mostra o erro caso algo tenha dado errado
-                  }
-              })
-              .catch(error => console.error('Erro:', error));
-          });
-      });
-  });
-  // Exibe o seletor de plantas para o canteiro
-  function mostrarPlantas(canteiroId) {
-      const selector = document.getElementById(`plantas-${canteiroId}`);
-      selector.classList.toggle('hidden');  // Alterna a visibilidade do seletor
-  }
+                            // Adiciona o novo canteiro no espaço correspondente
+                            const canteirosContainer = document.getElementById(`canteiros-${data.espaco_id}`);
+                            canteirosContainer.appendChild(canteiroDiv);
+                        } else {
+                            alert(data.error);  // Mostra o erro caso algo tenha dado errado
+                        }
+                    })
+                    .catch(error => console.error('Erro:', error));
+            });
+        });
+    });
+    // Exibe o seletor de plantas para o canteiro
+    function mostrarPlantas(canteiroId) {
+        const selector = document.getElementById(`plantas-${canteiroId}`);
+        selector.classList.toggle('hidden');  // Alterna a visibilidade do seletor
+    }
 
-  // Adiciona a planta selecionada ao canteiro
-  function adicionarPlanta(select, canteiroId) {
-      const plantaId = select.value;
-      const plantaNome = select.options[select.selectedIndex].text;
+    // Adiciona a planta selecionada ao canteiro
+    function adicionarPlanta(select, canteiroId) {
+        const plantaId = select.value;
+        const plantaNome = select.options[select.selectedIndex].text;
 
-      // Cria um novo elemento para mostrar a planta no canteiro
-      const plantaDiv = document.createElement('div');
-      plantaDiv.classList.add('bg-gray-200', 'p-2', 'mt-2', 'rounded-lg');
-      plantaDiv.innerText = `Planta: ${plantaNome}`;
+        // Cria um novo elemento para mostrar a planta no canteiro
+        const plantaDiv = document.createElement('div');
+        plantaDiv.classList.add('bg-gray-200', 'p-2', 'mt-2', 'rounded-lg');
+        plantaDiv.innerText = `Planta: ${plantaNome}`;
 
-      // Adiciona a planta ao container do canteiro
-      const listaPlantas = document.getElementById(`lista-plantas-${canteiroId}`);
-      listaPlantas.appendChild(plantaDiv);
+        // Adiciona a planta ao container do canteiro
+        const listaPlantas = document.getElementById(`lista-plantas-${canteiroId}`);
+        listaPlantas.appendChild(plantaDiv);
 
-      // Limpa a seleção
-      select.selectedIndex = 0;
-  }
+        // Limpa a seleção
+        select.selectedIndex = 0;
+    }
+
+
+    function toggleEspaco(espacoId) {
+        const content = document.getElementById(`conteudo-espaco-${espacoId}`);
+        const icon = document.getElementById(`icon-${espacoId}`);
+        
+        // Alterna a classe hidden para mostrar ou ocultar o conteúdo
+        content.classList.toggle('hidden');
+        
+        // Alterna o ícone da seta
+        if (content.classList.contains('hidden')) {
+            icon.innerHTML = '&#9660;'; // seta para baixo
+        } else {
+            icon.innerHTML = '&#9650;'; // seta para cima
+        }
+    }
 </script>
 
 
