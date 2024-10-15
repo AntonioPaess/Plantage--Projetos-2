@@ -4,3 +4,4 @@ from .models import *
 admin.site.register(Espaco)
 admin.site.register(Canteiro)
 admin.site.register(Planta)
+admin.site.register(CanteiroPlanta)

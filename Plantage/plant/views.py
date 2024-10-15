@@ -7,13 +7,21 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+
 
 @login_required
 def HomeView(request):
-    espacos = Espaco.objects.all()
-    plantas = Planta.objects.all()
-    canteiros = Canteiro.objects.all()  # Carrega todos os espaços do banco
-    return render(request, 'home.html', {'espacos': espacos, 'canteiros': canteiros, 'plantas': plantas})
+        espacos = Espaco.objects.all()
+        canteiros = Canteiro.objects.all() 
+        plantas = Planta.objects.all()
+
+        # Renderiza o template passando os canteiros com suas plantas associadas
+        return render(request, 'home.html', {
+            'espacos': espacos,
+            'canteiros': canteiros,  # Os canteiros já terão suas plantas associadas devido ao prefetch_related
+            'plantas': plantas
+        })
 
 
 @method_decorator(login_required, name='dispatch')
@@ -158,3 +166,38 @@ def testeview(request):
     return render(request, 'teste.html')
 
 
+
+@login_required
+def adicionar_planta_canteiro(request):
+    if request.method == 'POST':
+        try:
+            canteiro_id = request.POST.get('canteiro_id')
+            planta_id = request.POST.get('planta_id')
+            
+            canteiro = Canteiro.objects.get(id=canteiro_id)
+            planta = Planta.objects.get(id=planta_id)
+            
+            # Verificar a quantidade atual de plantas no canteiro
+            quantidade_atual = CanteiroPlanta.objects.filter(canteiro=canteiro).count()
+            if quantidade_atual >= canteiro.quantMaxPlant:
+                messages.warning(request, 'Quantidade máxima de plantas atingida.')
+                return redirect('home')  # Substitua pelo nome da view ou URL apropriada
+            
+            # Adicionar a planta ao canteiro
+            canteiro_planta, created = CanteiroPlanta.objects.get_or_create(canteiro=canteiro, planta=planta)
+            if not created:
+                canteiro_planta.quantidade += 1
+            else:
+                canteiro_planta.quantidade = 1
+            canteiro_planta.save()
+
+            return JsonResponse({
+                'success': True,
+                'planta_imagem': planta.imagem,  # Aqui usamos diretamente a URL da imagem
+                'planta_nome': planta.nome,
+                'quantidade': canteiro_planta.quantidade
+            })
+        except (Canteiro.DoesNotExist, Planta.DoesNotExist):
+            return JsonResponse({'success': False, 'error': 'Canteiro ou planta não encontrados.'})
+
+    return JsonResponse({'success': False, 'error': 'Método inválido.'})

@@ -9,6 +9,8 @@ urlpatterns = [
     path('plantalist/', ListAllView.as_view(), name="list-all"),
     path('plant/<int:id>', PlantaDetail.as_view(), name="planta-detail"),
     path('teste/', testeview, name="teste"),
+    path('add-planta/',adicionar_planta_canteiro, name="add-planta")
+    
 ]
 
 
