@@ -9,13 +9,6 @@ class Espaco(models.Model):
         return self.nome
 
 
-class Canteiro(models.Model):
-    espaco = models.ForeignKey(Espaco, on_delete=models.CASCADE)
-    nome = models.CharField(max_length=20)
-    quantMaxPlant = models.IntegerField(default = 10) # Quantidade máxima de plantas que cabem naquele canteiro
-    
-    def __str__(self):
-        return self.nome
 
 
 class Planta(models.Model):
@@ -27,6 +20,15 @@ class Planta(models.Model):
 
     
     def __str__(self):
+        return self.nome
+
+class Canteiro(models.Model):
+    espaco = models.ForeignKey(Espaco, on_delete=models.CASCADE)
+    nome = models.CharField(max_length=20)
+    quantMaxPlant = models.IntegerField(default=10)
+    plantas = models.ManyToManyField(Planta, related_name='canteiros', blank=True)  # Relacionamento Many-to-Many
+
+    def str(self):
         return self.nome
 
 
