@@ -7,13 +7,21 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+
 
 @login_required
 def HomeView(request):
-    espacos = Espaco.objects.all()
-    plantas = Planta.objects.all()
-    canteiros = Canteiro.objects.all()  # Carrega todos os espaços do banco
-    return render(request, 'home.html', {'espacos': espacos, 'canteiros': canteiros, 'plantas': plantas})
+        espacos = Espaco.objects.all()
+        canteiros = Canteiro.objects.all() 
+        plantas = Planta.objects.all()
+
+        # Renderiza o template passando os canteiros com suas plantas associadas
+        return render(request, 'home.html', {
+            'espacos': espacos,
+            'canteiros': canteiros,  # Os canteiros já terão suas plantas associadas devido ao prefetch_related
+            'plantas': plantas
+        })
 
 
 @method_decorator(login_required, name='dispatch')
@@ -158,3 +166,32 @@ def testeview(request):
     return render(request, 'teste.html')
 
 
+
+@login_required
+def adicionar_planta_canteiro(request):
+    if request.method == 'POST':
+        canteiro_id = request.POST.get('canteiro_id')
+        planta_id = request.POST.get('planta_id')
+        quantidade = int(request.POST.get('quantidade', 1))
+
+        canteiro = get_object_or_404(Canteiro, id=canteiro_id)
+        planta = get_object_or_404(Planta, id=planta_id)
+
+        # Verifica se a planta já está no canteiro
+        canteiro_planta, created = CanteiroPlanta.objects.get_or_create(canteiro=canteiro, planta=planta)
+        if not created:
+            # Atualiza a quantidade da planta existente
+            canteiro_planta.quantidade += quantidade
+        else:
+            # Define a quantidade da nova planta
+            canteiro_planta.quantidade = quantidade
+        canteiro_planta.save()
+
+        return JsonResponse({
+            'success': True,
+            'planta_nome': planta.nome,
+            'planta_imagem': planta.imagem,
+            'quantidade': canteiro_planta.quantidade
+        })
+
+    return JsonResponse({'success': False, 'error': 'Método não permitido'}, status=405)
