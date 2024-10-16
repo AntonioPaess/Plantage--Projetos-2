@@ -170,34 +170,28 @@ def testeview(request):
 @login_required
 def adicionar_planta_canteiro(request):
     if request.method == 'POST':
-        try:
-            canteiro_id = request.POST.get('canteiro_id')
-            planta_id = request.POST.get('planta_id')
-            
-            canteiro = Canteiro.objects.get(id=canteiro_id)
-            planta = Planta.objects.get(id=planta_id)
-            
-            # Verificar a quantidade atual de plantas no canteiro
-            quantidade_atual = CanteiroPlanta.objects.filter(canteiro=canteiro).count()
-            if quantidade_atual >= canteiro.quantMaxPlant:
-                messages.warning(request, 'Quantidade máxima de plantas atingida.')
-                return redirect('home')  # Substitua pelo nome da view ou URL apropriada
-            
-            # Adicionar a planta ao canteiro
-            canteiro_planta, created = CanteiroPlanta.objects.get_or_create(canteiro=canteiro, planta=planta)
-            if not created:
-                canteiro_planta.quantidade += 1
-            else:
-                canteiro_planta.quantidade = 1
-            canteiro_planta.save()
+        canteiro_id = request.POST.get('canteiro_id')
+        planta_id = request.POST.get('planta_id')
+        quantidade = int(request.POST.get('quantidade', 1))
 
-            return JsonResponse({
-                'success': True,
-                'planta_imagem': planta.imagem,  # Aqui usamos diretamente a URL da imagem
-                'planta_nome': planta.nome,
-                'quantidade': canteiro_planta.quantidade
-            })
-        except (Canteiro.DoesNotExist, Planta.DoesNotExist):
-            return JsonResponse({'success': False, 'error': 'Canteiro ou planta não encontrados.'})
+        canteiro = get_object_or_404(Canteiro, id=canteiro_id)
+        planta = get_object_or_404(Planta, id=planta_id)
 
-    return JsonResponse({'success': False, 'error': 'Método inválido.'})
+        # Verifica se a planta já está no canteiro
+        canteiro_planta, created = CanteiroPlanta.objects.get_or_create(canteiro=canteiro, planta=planta)
+        if not created:
+            # Atualiza a quantidade da planta existente
+            canteiro_planta.quantidade += quantidade
+        else:
+            # Define a quantidade da nova planta
+            canteiro_planta.quantidade = quantidade
+        canteiro_planta.save()
+
+        return JsonResponse({
+            'success': True,
+            'planta_nome': planta.nome,
+            'planta_imagem': planta.imagem,
+            'quantidade': canteiro_planta.quantidade
+        })
+
+    return JsonResponse({'success': False, 'error': 'Método não permitido'}, status=405)

@@ -56,8 +56,8 @@
                     </button>
                     {% endfor %}
                 </div>
-
-                <!-- Select para escolher o canteiro -->
+                
+                <!-- Select para escolher o canteiro e campo de quantidade -->
                 <div id="select-canteiro-container-{{ espaco.id }}" class="hidden mt-4 w-full">
                     <label for="select-canteiro">Selecione o Canteiro:</label>
                     <select id="select-canteiro-{{ espaco.id }}" class="w-full p-2 border rounded">
@@ -65,6 +65,8 @@
                         <option value="{{ canteiro.id }}">{{ canteiro.nome }}</option>
                         {% endfor %}
                     </select>
+                    <label for="quantidade-planta">Quantidade:</label>
+                    <input type="number" id="quantidade-planta-{{ espaco.id }}" class="w-full p-2 border rounded" min="1" value="1">
                     <button onclick="escolherCanteiroParaPlanta({{ espaco.id }})" class="mt-2 bg-blue-500 text-white p-2 rounded">Adicionar</button>
                 </div>
 
@@ -76,17 +78,33 @@
 
                         <!-- Mostrar plantas já associadas ao canteiro -->
                         <div id="lista-plantas-{{ canteiro.id }}" class="flex flex-wrap gap-2 mt-2 w-full">
-                            {% for planta in canteiro.plantas.all %}
+                            {% for canteiro_planta in canteiro.canteiroplanta_set.all %}
                             <div class="flex flex-col items-center bg-white p-2 rounded-lg transition-transform duration-300 hover:scale-105">
-                                <img src="{{ planta.imagem }}" alt="{{ planta.nome }}" class="w-24 h-24 object-cover rounded-full mb-2">
-                                <p class="text-black text-center">{{ planta.nome }}</p>
+                                <img src="{{ canteiro_planta.planta.imagem }}" alt="{{ canteiro_planta.planta.nome }}" class="w-24 h-24 object-cover rounded-full mb-2">
+                                <p class="text-black text-center">{{ canteiro_planta.planta.nome }}</p>
+                                <p class="text-black text-center">Quantidade: {{ canteiro_planta.quantidade }}</p>
                             </div>
                             {% endfor %}
                         </div>
                     </div>
                     {% endfor %}
                 </div>
+                
             </div>
+            <!-- Botão de adicionar canteiro -->
+            {% if espaco.canteiro_set.count < espaco.quantMaxCanteiro %}
+            <div class="mt-4 text-center py-4 hover:animate-bounce">
+                <a href="{% url 'add-canteiro' espaco.id %}"
+                    class="shadow-lg px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700 transition-transform duration-300 ease-in-out transform hover:scale-105"
+                    data-espaco-id="{{ espaco.id }}">
+                    Adicionar Canteiro
+                </a>
+            </div>
+            {% else %}
+            <div class="mt-4">
+                <span class="text-red-500">Limite de canteiros atingido</span>
+            </div>
+            {% endif %}
         </div>
         <br>
         {% endfor %}
@@ -143,18 +161,20 @@
     // Escolha um canteiro para adicionar a planta
     function escolherCanteiroParaPlanta(espacoId) {
         const select = document.getElementById(`select-canteiro-${espacoId}`);
+        const quantidadeInput = document.getElementById(`quantidade-planta-${espacoId}`);
         const canteiroId = select.value;
+        const quantidade = parseInt(quantidadeInput.value);
 
-        if (!canteiroId || isNaN(canteiroId)) {
-            alert("Canteiro inválido.");
+        if (!canteiroId || isNaN(canteiroId) || isNaN(quantidade) || quantidade < 1) {
+            alert("Canteiro ou quantidade inválida.");
             return;
         }
-        console.log('Peguei o id do canteiro!');
-        adicionarPlanta(plantaSelecionada, canteiroId, espacoId);
+        console.log('Peguei o id do canteiro e a quantidade!');
+        adicionarPlanta(plantaSelecionada, canteiroId, espacoId, quantidade);
     }
 
     // Função para adicionar planta ao canteiro
-    function adicionarPlanta(plantaId, canteiroId, espacoId) {
+    function adicionarPlanta(plantaId, canteiroId, espacoId, quantidade) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         fetch('/add-planta/', {
@@ -165,7 +185,8 @@
             },
             body: new URLSearchParams({
                 'canteiro_id': canteiroId,
-                'planta_id': plantaId
+                'planta_id': plantaId,
+                'quantidade': quantidade
             })
         })
         .then(response => {
@@ -179,21 +200,15 @@
             if (data.success) {
                 console.log('Planta adicionada com sucesso!');
 
-                // Verifica se a planta já está no canteiro (para aumentar a quantidade)
-                let plantaDiv = document.querySelector(`#planta-${canteiroId}-${plantaId}`);
-                if (plantaDiv) {
-                    const quantidadeSpan = plantaDiv.querySelector('.quantidade');
-                    quantidadeSpan.textContent = `Quantidade: ${data.quantidade}`;
-                } else {
-                    plantaDiv = document.createElement('div');
-                    plantaDiv.id = `planta-${canteiroId}-${plantaId}`;
+                // Adiciona a planta ao canteiro a quantidade de vezes especificada
+                const listaPlantas = document.getElementById(`lista-plantas-${canteiroId}`);
+                for (let i = 0; i < quantidade; i++) {
+                    const plantaDiv = document.createElement('div');
                     plantaDiv.classList.add('flex', 'flex-col', 'items-center', 'bg-white', 'p-2', 'rounded-lg', 'transition-transform', 'duration-300', 'hover:scale-105');
                     plantaDiv.innerHTML = `
                         <img src="${data.planta_imagem}" alt="${data.planta_nome}" class="w-24 h-24 object-cover rounded-full mb-2">
-                        <p class="text-black text-center">Planta: ${data.planta_nome}</p>
-                        <span class="quantidade">Quantidade: ${data.quantidade}</span>
+                        <p class="text-black text-center">${data.planta_nome}</p>
                     `;
-                    const listaPlantas = document.getElementById(`lista-plantas-${canteiroId}`);
                     listaPlantas.appendChild(plantaDiv);
                 }
 
@@ -230,5 +245,4 @@
         }
     }
 </script>
-
 {% endblock %}
