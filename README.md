@@ -42,7 +42,7 @@
 
 - [Website Azure Plants](https://plantage--projetos-2.azurewebsites.net/)
 - [ScreenCast - 2 Histórias]()
-- [Bug Tracking]() 
+- [Bug Tracking](https://docs.google.com/spreadsheets/d/1_vLIbVgqCZd77HUHSUIrtH9V1vPqc_FbXZ01pbly9EE/edit?usp=sharing) 
 - [BackLog](https://docs.google.com/spreadsheets/d/1ljbu1budRT9PmsQ33NYLL4nXQcchDiHaDzfqgmcfjYo/edit?usp=sharing)
 - [Relatório Pair Programming](https://docs.google.com/document/d/192hdRMBRvWtN7WSGMJpub7XyjWYUM0NZiNpqMRTOqSQ/edit?usp=sharing)
 
