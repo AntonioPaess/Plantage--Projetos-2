@@ -1,63 +1,162 @@
-{% extends 'layouts/blank.html' %}
-{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plantage</title>
+    <link rel="icon" type="image/png" href="{% static 'plantage.png' %}">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://unpkg.com/htmx.org/dist/htmx.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style type="text/tailwindcss">
+        [x-cloak] { 
+            display: none !important; 
+        }
+        h1 {
+            @apply text-4xl font-bold mb-4
+        }
+        h2 {
+            @apply text-xl font-bold mb-2
+        }
+        p {
+            @apply mb-4
+        }
+        .button, button, [type='submit'], [type='button'] {
+            @apply bg-indigo-600 text-white font-bold px-6 py-4 inline-block 
+            rounded-lg shadow-lg transition-all cursor-pointer
+        }
+        .button:hover, button:hover, [type='submit']:hover, [type='button']:hover {
+            @apply bg-indigo-700
+        }
+        .button:active, button:active, [type='submit']:active, [type='button']:active {
+            @apply scale-95
+        }
+        .button.alert, button.alert {
+            @apply bg-red-700
+        }
+        .button.alert:hover, button.alert:hover {
+            @apply bg-red-600
+        }
+        .button-red {
+            @apply !bg-red-500 hover:!bg-red-600
+        }
+        .button-gray {
+            @apply !bg-gray-300 hover:!bg-[#c3c9d0]
+        }
+        .navitems>li>a {
+            @apply flex items-center gap-2 h-12 px-4 hover:bg-gray-700 rounded-lg;
+        }
+        .hoverlist>* {
+            @apply hover:bg-gray-100 rounded-md transition duration-150;
+        }
+        .hoverlist>*>a {
+            @apply flex items-center p-2;
+        }
+        .highlight {
+            @apply !bg-indigo-100;
+        }
+        .allauth content a {
+            @apply underline underline-offset-2
+        }
+        .allauth content a:hover {
+            @apply text-indigo-500
+        }
+        .allauth form[action="/accounts/signup/"] ul {
+            @apply hidden
+        }
+        .allauth form[action="/accounts/signup/"] ul.errorlist {
+            @apply block
+        }
+        .allauth .helptext {
+            @apply block mt-4
+        }
+        label {
+            @apply hidden
+        }
+        input[type=file] {
+            @apply bg-white pl-0
+        }
+        .textarea, textarea, input {
+            @apply w-full rounded-lg py-4 px-5 bg-gray-100
+        }
+        .errorlist li {
+            @apply p-1 pl-4 border-l-red-500 border-l-4 border-solid mb-2 text-red-500
+        }
+        label[for="id_remember"] {
+            @apply inline-block w-auto mr-2
+        }
+        input[name="remember"] {
+            @apply w-auto
 
-<h1 class="text-center py-10 text-white">Adicionar Planta</h1>
+        }
+        .alert-info { @apply bg-blue-300 }
+        .alert-success { @apply bg-green-400 }
+        .alert-warning { @apply bg-amber-400 }
+        .alert-danger { @apply bg-amber-500 }
+    </style>
+</head>
 
+<body class="min-h-screen bg-gradient-to-b from-green-800 to-green-600">
+    
+    {% include 'includes/header.html' %}
 
-
-<form action="{% url 'add' %}" method="POST" class="flex gap-2 px-8 py--24" autocomplete="off">
-    {% csrf_token %}
-
-    <div class="max-w-3xl mx-auto p--20 font-bold">
-
-
-        <h2 class="text-white" for="nome">Nome:</h2>
-        <div class="">
-            <input type="text" name="nome" id="nome" placeholder="Digite o nome da planta" required>
-            <br>
-            <br>
-            <h2 class="text-white" for="nome">Dias para o Manejo da planta:</h2>
-
-
-            <input type="number" id="ciclo_de_podagem" name="ciclo_de_podagem" placeholder="Digite o numero aqui"
+    
+    <form action="{% url 'add' %}" method="POST" class="flex gap-2 px-8 py-24" autocomplete="off">
+        {% csrf_token %}
+        
+        <div class="ml-32 mb-16 bg-white rounded-2xl md:drop-shadow-2xl shadow-black w-full p-8 max-w-3xl mx-auto p--20 font-bold">
+            
+            
+            <h2 class="text-black" for="nome">Nome:</h2>
+            <div class="">
+                <input type="text" name="nome" id="nome" placeholder="Digite o nome da planta" required>
+                <br>
+                <br>
+                <h2 class="text-black" for="nome">Dias para o Manejo da planta:</h2>
+                
+                
+                <input type="number" id="ciclo_de_podagem" name="ciclo_de_podagem" placeholder="Digite o numero aqui"
                 step="1" required>
-            <br>
-            <br>
-            <h2 class="text-white" for="nome">Dias para a colheita:</h2>
-
-            <input type="number" id="ciclo_de_colheita" name="ciclo_de_colheita" placeholder="Digite o numero aqui"
+                <br>
+                <br>
+                <h2 class="text-black" for="nome">Dias para a colheita:</h2>
+                
+                <input type="number" id="ciclo_de_colheita" name="ciclo_de_colheita" placeholder="Digite o numero aqui"
                 step="1" required>
-            <br>
-            <br>
-
-            <div class="inputdiv text-black">
-                <h2 class="text-white" for="imagem">URL da Imagem:</h2>
-                <input type="url" name="imagem" id="imagem" placeholder="Digite a URL da imagem" required>
+                <br>
+                <br>
+                
+                <div class="inputdiv text-black">
+                    <h2 class="text-black" for="imagem">URL da Imagem:</h2>
+                    <input type="url" name="imagem" id="imagem" placeholder="Digite a URL da imagem" required>
+                </div>
+               
+             
+                <h2 class="text-white" for="nome">Necessidade de Nutrientes:</h2>
+                <select name="necessidade_de_nutrientes" id="necessidade_de_nutrientes" required>
+                    <option value="">Selecione a necessidade de Nutrientes da Planta</option>
+                    <option value="Baixa">Baixa</option>
+                    <option value="Media">Média</option>
+                    <option value="Alta">Alta</option>
+                </select>
+                
             </div>
             <br>
             <br>
-
-            <h2 class="text-white" for="nome">Necessidade de Nutrientes:</h2>
-            <select name="necessidade_de_nutrientes" id="necessidade_de_nutrientes" required>
-                <option value="">Selecione a necessidade de Nutrientes da Planta</option>
-                <option value="Baixa">Baixa</option>
-                <option value="Media">Média</option>
-                <option value="Alta">Alta</option>
-            </select>
-
+            <div class=" text-center">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
         </div>
-        <br>
-        <br>
-        <div class=" text-center">
-            <button type="submit" class="btn btn-primary">Enviar</button>
-        </div>
-    </div>
+        
+    </form>
+    
+    
 
-</form>
+</body>
 
 
 
 
-
-
-{% endblock %}

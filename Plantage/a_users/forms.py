@@ -9,8 +9,8 @@ class ProfileForm(ModelForm):
         fields = ['image', 'displayname', 'info' ]
         widgets = {
             'image': forms.FileInput(),
-            'displayname' : forms.TextInput(attrs={'placeholder': 'Add display name'}),
-            'info' : forms.Textarea(attrs={'rows':3, 'placeholder': 'Add information'})
+            'displayname' : forms.TextInput(attrs={'placeholder': 'Adicione o nome que deseja'}),
+            'info' : forms.Textarea(attrs={'rows':3, 'placeholder': 'Adicione uma descrição'})
         }
         
         

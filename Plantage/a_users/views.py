@@ -57,7 +57,7 @@ def profile_emailchange(request):
             # Check if the email already exists
             email = form.cleaned_data['email']
             if User.objects.filter(email=email).exclude(id=request.user.id).exists():
-                messages.warning(request, f'{email} is already in use.')
+                messages.warning(request, f'{email} já está em uso.')
                 return redirect('profile-settings')
             
             form.save() 
@@ -69,7 +69,7 @@ def profile_emailchange(request):
             
             return redirect('profile-settings')
         else:
-            messages.warning(request, 'Form not valid')
+            messages.warning(request, 'Formulário inválido')
             return redirect('profile-settings')
         
     return redirect('home')
@@ -87,7 +87,7 @@ def profile_delete_view(request):
     if request.method == "POST":
         logout(request)
         user.delete()
-        messages.success(request, 'Account deleted, what a pity')
+        messages.success(request, 'Conta deletada com sucesso!')
         return redirect('home')
     
     return render(request, 'a_users/profile_delete.html')

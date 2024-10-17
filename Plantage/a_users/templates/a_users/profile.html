@@ -4,11 +4,11 @@
 
 <div class="max-w-lg mx-auto flex flex-col items-center pt-20 px-4">
     <img class="w-36 h-36 rounded-full object-cover mb-4" src="{{ profile.avatar }}" />
-    <div class="text-center">
+    <div class="text-center text-white">
         <h1>{{ profile.name }}</h1>
-        <div class="text-gray-400 mb-2 -mt-3">@{{ profile.user.username }}</div>
+        <div class="text-white mb-2 -mt-3">@{{ profile.user.username }}</div>
         {% if profile.info %}
-        <div class="mt-8 hyphens-auto">{{ profile.info|linebreaksbr }}</div>
+        <div class="text-white max-w-2xl mt-8 hyphens-auto">{{ profile.info|linebreaksbr }}</div>
         {% endif %}  
     </div>
 </div>
