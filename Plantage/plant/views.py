@@ -10,11 +10,13 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 
+
 @login_required
 def HomeView(request):
-        espacos = Espaco.objects.all()
-        canteiros = Canteiro.objects.all() 
-        plantas = Planta.objects.all()
+        user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
+        espacos = Espaco.objects.filter(user=user_profile)
+        canteiros = Canteiro.objects.filter(user=user_profile)
+        plantas = Planta.objects.filter(user=user_profile)
 
         # Renderiza o template passando os canteiros com suas plantas associadas
         return render(request, 'home.html', {
@@ -26,15 +28,14 @@ def HomeView(request):
 
 @method_decorator(login_required, name='dispatch')
 class AddPlanta(View):
-
     def get(self, request):
         return render(request, 'forms/plantaForms.html')
 
     def post(self, request):
         name = request.POST.get("nome")
         nutri = request.POST.get("necessidade_de_nutrientes")
-        poda=request.POST.get("ciclo_de_podagem")
-        colhe= request.POST.get("ciclo_de_colheita")
+        poda = request.POST.get("ciclo_de_podagem")
+        colhe = request.POST.get("ciclo_de_colheita")
         urlImagem = request.POST.get("imagem")
 
         try:
@@ -69,20 +70,20 @@ class AddPlanta(View):
             messages.warning(request, 'O tempo em dias para podar precisa ser  um número positivo.')
             return redirect('add')
 
-        
-    
-
+        user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
 
         planta = Planta(
             nome=name,
             necessidade_de_nutrientes=nutri,
             ciclo_de_podagem=poda,
             ciclo_de_colheita=colhe,
-            imagem = urlImagem
+            imagem=urlImagem,
+            user=user_profile
         )
         planta.save()
         return redirect('home')
-
+    
+@method_decorator(login_required, name='dispatch')
 class AddEspaco(View):
     def get(self, request):
         return render(request, 'forms/areaForms.html')
@@ -102,25 +103,27 @@ class AddEspaco(View):
             messages.warning(request, 'A quantidade de canteiros no seu espaço necessita ser um valor maior que zero.')
             return redirect('add-espaco')
 
+        user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
 
         area = Espaco(
             nome=name,
             tipo_de_solo=tipoSolo,
-            quantMaxCanteiro = quantCante,
-            
+            quantMaxCanteiro=quantCante,
+            user=user_profile
         )
         area.save()
         return redirect('home')
 
+@method_decorator(login_required, name='dispatch')
 class AddCanteiro(View):
     def get(self, request, espaco_id):
-        espaco = Espaco.objects.get(id=espaco_id)  # Carrega o espaço correspondente
+        espaco = get_object_or_404(Espaco, id=espaco_id)  # Carrega o espaço correspondente
         return render(request, 'forms/canteiroForms.html', {'espaco': espaco})
 
     def post(self, request, espaco_id):
-        espaco = Espaco.objects.get(id=espaco_id)  # Obtém o espaço
+        espaco = get_object_or_404(Espaco, id=espaco_id)  # Obtém o espaço
 
-        name = request.POST.get("nome")
+        nome = request.POST.get("nome")
         quantPlantMax = request.POST.get("quantMaxPlant")
 
         # Verifica o limite de canteiros e o número atual
@@ -131,22 +134,22 @@ class AddCanteiro(View):
             messages.warning(request, 'O número máximo de canteiros para este espaço já foi atingido.')
             return redirect('add-canteiro', espaco_id=espaco_id)
 
-        try:
-            quantPlantMax = int(quantPlantMax)
-            if quantPlantMax <= 0:
-                raise ValueError("Os valores precisam ser números positivos.")
-        except (ValueError, TypeError):
-            messages.warning(request, 'A quantidade de plantas no canteiro deve ser um valor maior que zero.')
-            return redirect('add-canteiro', espaco_id=espaco_id)
+        user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
 
-        # Cria o novo canteiro
-        Canteiro.objects.create(espaco=espaco, nome=name, quantMaxPlant=quantPlantMax)
-        return redirect('home')
+        try:
+            canteiro = Canteiro(nome=nome, user=user_profile, espaco=espaco)
+            canteiro.save()
+            messages.success(request, 'Canteiro adicionado com sucesso.')
+            return redirect('home')  # Redireciona para uma URL de sucesso
+        except Exception as e:
+            messages.error(request, f'Erro ao adicionar canteiro: {str(e)}')
+            return render(request, 'forms/canteiroForms.html', {'espaco': espaco})
 
 
 class ListAllView(View):
     def get(self, request):
-        plantas = Planta.objects.all()
+        user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
+        plantas = Planta.objects.filter(user=user_profile)
 
         ctx = {
             'allPlantas': plantas, 

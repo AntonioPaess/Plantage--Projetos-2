@@ -1,9 +1,11 @@
 from django.db import models
+from a_users.models import Profile
 
 class Espaco(models.Model):
     nome = models.CharField(max_length=20)
     tipo_de_solo = models.CharField(max_length=50)
     quantMaxCanteiro = models.IntegerField(default=5)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nome
@@ -14,7 +16,7 @@ class Planta(models.Model):
     ciclo_de_podagem = models.IntegerField()
     ciclo_de_colheita = models.IntegerField()
     imagem = models.URLField(max_length=200, default=None)
-
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     def __str__(self):
         return self.nome
 
@@ -23,6 +25,7 @@ class Canteiro(models.Model):
     nome = models.CharField(max_length=20)
     quantMaxPlant = models.IntegerField(default=10)
     plantas = models.ManyToManyField(Planta, through='CanteiroPlanta', blank=True)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nome
@@ -46,6 +49,7 @@ class InteracaoPlanta(models.Model):
     planta2 = models.ForeignKey(Planta, on_delete=models.CASCADE, related_name='interacoes_como_planta2')
     relacao = models.CharField(max_length=20)  # Ex: boa, ruim
     tipo_de_interacao = models.CharField(max_length=20)  # Ex: Controle de pragas, compatibilidade geral, etc.
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     
     def __str__(self):
         return f'{self.planta1} - {self.planta2} ({self.relacao})'
@@ -57,6 +61,7 @@ class Praga(models.Model):
     planta_afetada2 = models.ForeignKey(Planta, on_delete=models.CASCADE, null=True, blank=True, related_name='pragas_afetam2')
     planta_repele = models.ForeignKey(Planta, on_delete=models.CASCADE, related_name='pragas_repelidas_por')
     planta_repele2 = models.ForeignKey(Planta, on_delete=models.CASCADE, null=True, blank=True, related_name='pragas_repelidas_por2')
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.nome_praga
