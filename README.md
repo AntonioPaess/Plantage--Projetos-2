@@ -41,15 +41,17 @@
 #### Ciência da Computação:
 
 - [Website Azure Plants](https://plantage--projetos-2.azurewebsites.net/)
-- [ScreenCast - 2 Histórias]()
-- [Bug Tracking]() 
+- [ScreenCast - Protótipo de baixa fidelidade](https://drive.google.com/file/d/1ef54VnMzhBOmtI80Ghsj1m3UR37kgXr6/view)
+- [Bug Tracking](https://docs.google.com/spreadsheets/d/1_vLIbVgqCZd77HUHSUIrtH9V1vPqc_FbXZ01pbly9EE/edit?usp=sharing)
+- [Diagrama de Atividade](https://drive.google.com/file/d/1qKt00nQJoArY4mjpuKMu1IAkXQxMC4jP/view?usp=sharing) 
 - [BackLog](https://docs.google.com/spreadsheets/d/1ljbu1budRT9PmsQ33NYLL4nXQcchDiHaDzfqgmcfjYo/edit?usp=sharing)
 - [Relatório Pair Programming](https://docs.google.com/document/d/192hdRMBRvWtN7WSGMJpub7XyjWYUM0NZiNpqMRTOqSQ/edit?usp=sharing)
+- [Screencast - Aplicação web](https://drive.google.com/file/d/1Wpub_YuSrFNdDCJ_0eEDk3vI9qJ5p9ik/view?usp=sharing)
 
 ### Design:
 
 - [Identidade Visual](https://drive.google.com/file/d/1KCcf-b_AQZgs7NEQs_V3DP_UIX574vGe/view?usp=sharing)
-- [Protótipo de Baixa Fidelidade]() 
+- [Protótipo de Baixa Fidelidade](https://www.figma.com/design/CPeJxuTAlWZ0Hq1mRSTLIc/Prot%C3%B3tipo-clicavel?node-id=0-1&t=HXmYt2GjXIK0hf3k-1)
 
 <br>
 

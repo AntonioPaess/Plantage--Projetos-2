@@ -2,32 +2,43 @@ from django.db import models
 
 class Espaco(models.Model):
     nome = models.CharField(max_length=20)
-    tipo_de_solo = models.CharField(max_length=50)  # Ex: solo barroso
-    quantMaxCanteiro = models.IntegerField(default = 5) # Quantidade máxima de canteiros que cabem naquele espaço
-    
+    tipo_de_solo = models.CharField(max_length=50)
+    quantMaxCanteiro = models.IntegerField(default=5)
+
     def __str__(self):
         return self.nome
 
+class Planta(models.Model):
+    nome = models.CharField(max_length=20)
+    necessidade_de_nutrientes = models.CharField(max_length=20)
+    ciclo_de_podagem = models.IntegerField()
+    ciclo_de_colheita = models.IntegerField()
+    imagem = models.URLField(max_length=200, default=None)
+
+    def __str__(self):
+        return self.nome
 
 class Canteiro(models.Model):
     espaco = models.ForeignKey(Espaco, on_delete=models.CASCADE)
     nome = models.CharField(max_length=20)
-    quantMaxPlant = models.IntegerField(default = 10) # Quantidade máxima de plantas que cabem naquele canteiro
-    
+    quantMaxPlant = models.IntegerField(default=10)
+    plantas = models.ManyToManyField(Planta, through='CanteiroPlanta', blank=True)
+
     def __str__(self):
         return self.nome
 
+# Novo modelo intermediário que gerencia plantas dentro do canteiro
+class CanteiroPlanta(models.Model):
+    canteiro = models.ForeignKey(Canteiro, on_delete=models.CASCADE)
+    planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
+    quantidade = models.PositiveIntegerField(default=1)  # Quantidade de plantas no canteiro
 
-class Planta(models.Model):
-    nome = models.CharField(max_length=20)
-    necessidade_de_nutrientes = models.CharField(max_length=20) #ex: baixa, media, alta
-    ciclo_de_podagem = models.IntegerField()  # Ciclo em dias, por exemplo
-    ciclo_de_colheita = models.IntegerField()  # Ciclo em dias
-    imagem = models.URLField(max_length = 20, default = None)
+    class Meta:
+        unique_together = ('canteiro', 'planta')  # Garante que a combinação de canteiro e planta seja única
 
-    
     def __str__(self):
-        return self.nome
+        return f'{self.quantidade}x {self.planta.nome} em {self.canteiro.nome}'
+
 
 
 class InteracaoPlanta(models.Model):
@@ -49,3 +60,5 @@ class Praga(models.Model):
     
     def __str__(self):
         return self.nome_praga
+
+

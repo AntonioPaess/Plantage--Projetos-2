@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plantage</title>
+    <link rel="icon" type="image/png" href="{% static 'plantage.png' %}">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://unpkg.com/htmx.org/dist/htmx.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style type="text/tailwindcss">
+        [x-cloak] { 
+            display: none !important; 
+        }
+        h1 {
+            @apply text-4xl font-bold mb-4
+        }
+        h2 {
+            @apply text-xl font-bold mb-2
+        }
+        p {
+            @apply mb-4
+        }
+        .button, button, [type='submit'], [type='button'] {
+            @apply bg-indigo-600 text-white font-bold px-6 py-4 inline-block 
+            rounded-lg shadow-lg transition-all cursor-pointer
+        }
+        .button:hover, button:hover, [type='submit']:hover, [type='button']:hover {
+            @apply bg-indigo-700
+        }
+        .button:active, button:active, [type='submit']:active, [type='button']:active {
+            @apply scale-95
+        }
+        .button.alert, button.alert {
+            @apply bg-red-700
+        }
+        .button.alert:hover, button.alert:hover {
+            @apply bg-red-600
+        }
+        .button-red {
+            @apply !bg-red-500 hover:!bg-red-600
+        }
+        .button-gray {
+            @apply !bg-gray-300 hover:!bg-[#c3c9d0]
+        }
+        .navitems>li>a {
+            @apply flex items-center gap-2 h-12 px-4 hover:bg-gray-700 rounded-lg;
+        }
+        .hoverlist>* {
+            @apply hover:bg-gray-100 rounded-md transition duration-150;
+        }
+        .hoverlist>*>a {
+            @apply flex items-center p-2;
+        }
+        .highlight {
+            @apply !bg-indigo-100;
+        }
+        .allauth content a {
+            @apply underline underline-offset-2
+        }
+        .allauth content a:hover {
+            @apply text-indigo-500
+        }
+        .allauth form[action="/accounts/signup/"] ul {
+            @apply hidden
+        }
+        .allauth form[action="/accounts/signup/"] ul.errorlist {
+            @apply block
+        }
+        .allauth .helptext {
+            @apply block mt-4
+        }
+        label {
+            @apply hidden
+        }
+        input[type=file] {
+            @apply bg-white pl-0
+        }
+        .textarea, textarea, input {
+            @apply w-full rounded-lg py-4 px-5 bg-gray-100
+        }
+        .errorlist li {
+            @apply p-1 pl-4 border-l-red-500 border-l-4 border-solid mb-2 text-red-500
+        }
+        label[for="id_remember"] {
+            @apply inline-block w-auto mr-2
+        }
+        input[name="remember"] {
+            @apply w-auto
+
+        }
+        .alert-info { @apply bg-blue-300 }
+        .alert-success { @apply bg-green-400 }
+        .alert-warning { @apply bg-amber-400 }
+        .alert-danger { @apply bg-amber-500 }
+    </style>
+</head>
+
+
+
+
+<body class=" min-h-screen bg-gradient-to-b from-green-800 to-blue-200">
+        {% include 'includes/header.html' %}
+        
+        <!-- Hero Section -->
+        <section class="flex items-center justify-center h-[80vh] text-center">
+            <div class="bg-white bg-opacity-70 p-8 rounded-lg shadow-lg">
+                <h1 class="text-4xl font-bold text-green-900">Gerenciamento Inteligente de Atividades Agrícolas</h1>
+                <p class="text-lg mt-4 text-green-700">Plantage ajuda pequenos agricultores a melhorar a produtividade e sustentabilidade das suas propriedades.</p>
+                <a href="#features" class="mt-8 inline-block px-6 py-3 bg-green-700 text-white font-bold rounded hover:bg-green-600">Saiba Mais</a>
+            </div>
+        </section>
+        
+        <!-- Features Section -->
+        <section id="features" class="py-16 bg-gray-100 bg-opacity-80">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center text-green-900">Recursos</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2422/2422612.png" alt="Planejamento" class="h-16 mx-auto mb-4">
+                        <h3 class="text-xl font-bold text-green-900 mb-2">Planejamento de Atividades</h3>
+                        <p class="text-gray-600">Organize todas as tarefas da fazenda, do plantio à colheita.</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2516/2516733.png" alt="Manejo do Solo" class="h-16 mx-auto mb-4">
+                        <h3 class="text-xl font-bold text-green-900 mb-2">Manejo Adequado do Solo</h3>
+                        <p class="text-gray-600">Dicas para otimizar o uso de nutrientes e melhorar a qualidade do solo.</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3159/3159786.png" alt="Controle de Pragas" class="h-16 mx-auto mb-4">
+                        <h3 class="text-xl font-bold text-green-900 mb-2">Controle de Pragas</h3>
+                        <p class="text-gray-600">Soluções para o monitoramento e controle eficiente de pragas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- About Section -->
+        <section id="about" class="py-16 bg-white bg-opacity-80">
+            <div class="container mx-auto px-4">
+    
+      <h2 class="text-3xl font-bold text-center text-green-900">Sobre o Plantage</h2>
+      <p class="mt-6 text-center text-gray-700">
+        O Plantage é uma aplicação web desenvolvida para ajudar pequenos agricultores a superarem os desafios da agricultura moderna, como falta de planejamento, dificuldades com o manejo do solo e controle de pragas. Adaptado para pessoas com baixo nível de letramento digital, ele oferece uma interface intuitiva e fácil de usar para otimizar a produção e aumentar a competitividade das pequenas propriedades.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-16 bg-green-800 bg-opacity-90 text-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center">Entre em Contato</h2>
+      <p class="mt-6 text-center">Quer saber mais sobre o Plantage? Entre em contato com nossa equipe!</p>
+      <div class="flex justify-center mt-8">
+        <form action="#" class="w-full max-w-md">
+          <div class="mb-4">
+            <input type="text" placeholder="Seu nome" class="w-full px-4 py-2 rounded bg-white text-gray-800">
+          </div>
+          <div class="mb-4">
+            <input type="email" placeholder="Seu email" class="w-full px-4 py-2 rounded bg-white text-gray-800">
+          </div>
+          <div class="mb-4">
+            <textarea placeholder="Sua mensagem" class="w-full px-4 py-2 rounded bg-white text-gray-800"></textarea>
+          </div>
+          <button type="submit" class="w-full py-3 bg-green-600 text-white font-bold rounded hover:bg-green-500">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-green-900 text-white py-6">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2024 Plantage. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+</body>
+
+
+
+</html>
+
