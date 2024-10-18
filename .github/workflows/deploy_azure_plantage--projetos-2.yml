@@ -35,9 +35,8 @@ jobs:
         run: |
           cd Plantage/
           rm -f db.sqlite3
-          rm -f .env
+          rm .env
           cd ..
-
 
       - name: Zip artifact for deployment
         run: |
@@ -86,4 +85,4 @@ jobs:
         with:
           app-name: 'Plantage--Projetos-2'
           slot-name: 'Production'
-          
+
