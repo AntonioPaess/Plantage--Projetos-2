@@ -198,3 +198,7 @@ def adicionar_planta_canteiro(request):
         })
 
     return JsonResponse({'success': False, 'error': 'Método não permitido'}, status=405)
+
+import datetime as date
+def calendario(request):
+    return render(request,'calendario.html')

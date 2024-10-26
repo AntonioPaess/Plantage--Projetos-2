@@ -1,0 +1,19 @@
+{% extends 'layouts/blank.html' %}
+{% block content %}
+<h1 id="meses" class="text-center">Variavel</h1>
+
+<script>
+    const mes = document.querySelector('#meses');
+    const momentum = new Date().getMonth();
+    const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+    mes.innerHTML = meses[momentum];
+
+    const today = new Date().getDate();//dia do mês
+    //objetivo de const today: Modificar o quadrado do calendário para cor diferente de branco/cinza
+    //document.querySelector('#testando').innerHTML = `Dia: ${today}`;
+    const ano = new Date().getFullYear();
+    const leap = false;
+    if (momentum === 1 && ano%4 == 0){leap = true}
+    
+</script>
+{% endblock %}
