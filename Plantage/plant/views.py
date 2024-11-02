@@ -125,6 +125,14 @@ class AddCanteiro(View):
 
         nome = request.POST.get("nome")
         quantPlantMax = request.POST.get("quantMaxPlant")
+        #Motivo do erro no bugtrack: linha 127 não é usada 
+        try: 
+            if (int(quantPlantMax <= 0)):
+                raise ValueError("Os valores precisam ser números positivos.")
+        except(ValueError, TypeError):
+            messages.warning(request, 'O número de plantas precisa ser positivo')
+            return redirect('add-canteiro',espaco_id=espaco_id)
+
 
         # Verifica o limite de canteiros e o número atual
         limiteCant = espaco.quantMaxCanteiro  # Limite de canteiros no espaço

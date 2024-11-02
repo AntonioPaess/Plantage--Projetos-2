@@ -1,19 +1,32 @@
 {% extends 'layouts/blank.html' %}
 {% block content %}
 <h1 id="meses" class="text-center">Variavel</h1>
-
+<main class=" mx-auto w-11/12 flex-1 rounded-t-lg  p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 overflow-y-auto">
+<div id="box"></div>
+</main>
 <script>
     const mes = document.querySelector('#meses');
     const momentum = new Date().getMonth();
     const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
     mes.innerHTML = meses[momentum];
+    document.addEventListener('DOMContentLoaded', function() {
 
     const today = new Date().getDate();//dia do mês
     //objetivo de const today: Modificar o quadrado do calendário para cor diferente de branco/cinza
-    //document.querySelector('#testando').innerHTML = `Dia: ${today}`;
     const ano = new Date().getFullYear();
     const leap = false;
-    if (momentum === 1 && ano%4 == 0){leap = true}
-    
+    if (momentum === 1 && ano%4 == 0){leap = true};
+    var dias = 0;
+    const main = document.getElementById('box');
+    while (dias < 31){
+        dias++;
+        caixa = document.createElement('a');
+        caixa.classList.add('flex flex-col items-center bg-white shadow-lg rounded-lg overflow-hidden transition-transform duration-300 hover:shadow-xl transform hover:scale-105 ${dia+1}');
+        
+        main.appendChild(caixa);
+    }
+});
 </script>
 {% endblock %}
+<!--flex flex-col items-center bg-white shadow-lg 
+ rounded-lg overflow-hidden transition-transform duration-300 hover:shadow-xl transform hover:scale-105-->
