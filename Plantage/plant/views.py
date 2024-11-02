@@ -127,7 +127,7 @@ class AddCanteiro(View):
         quantPlantMax = request.POST.get("quantMaxPlant")
         #Motivo do erro no bugtrack: linha 127 não é usada 
         try: 
-            if (int(quantPlantMax <= 0)):
+            if int(quantPlantMax) <= 0:
                 raise ValueError("Os valores precisam ser números positivos.")
         except(ValueError, TypeError):
             messages.warning(request, 'O número de plantas precisa ser positivo')
