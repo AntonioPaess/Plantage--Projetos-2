@@ -166,6 +166,7 @@
         const quantidade = parseInt(quantidadeInput.value);
 
         if (!canteiroId || isNaN(canteiroId) || isNaN(quantidade) || quantidade < 1) {
+            console.log("Erro encontrado");
             alert("Canteiro ou quantidade inválida.");
             return;
         }

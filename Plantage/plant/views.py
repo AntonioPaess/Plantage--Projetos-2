@@ -132,8 +132,12 @@ class AddCanteiro(View):
         except(ValueError, TypeError):
             messages.warning(request, 'O número de plantas precisa ser positivo')
             return redirect('add-canteiro',espaco_id=espaco_id)
-
-
+        contagem = len(nome)
+        armazenar = [".","!","@","#","$","%","&"]
+        for i in range(contagem):
+            if nome[i] in armazenar:
+                messages.warning(request, 'Alguns caracteres especiais não são permitidos')
+                return redirect('add-canteiro',espaco_id=espaco_id)
         # Verifica o limite de canteiros e o número atual
         limiteCant = espaco.quantMaxCanteiro  # Limite de canteiros no espaço
         quantCanteiros = espaco.canteiro_set.count()  # Total de canteiros no espaço
