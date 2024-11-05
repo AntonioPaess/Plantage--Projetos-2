@@ -15,6 +15,7 @@
 
             <li><a href="{% url 'list-all' %}" class="navitems flex items-center justify-center h-full">
                 Minhas Plantas</a></li>
+            <li><a href="{% url 'calendario' %}" class="navitems flex items-center justify-center h-full">Calendário</a></li>
 
             <li x-data="{ dropdownOpen: false }" class="relative">
                 <a @click="dropdownOpen = !dropdownOpen" @click.away="dropdownOpen = false" class="cursor-pointer select-none">

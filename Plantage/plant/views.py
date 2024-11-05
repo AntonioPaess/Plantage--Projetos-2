@@ -125,7 +125,19 @@ class AddCanteiro(View):
 
         nome = request.POST.get("nome")
         quantPlantMax = request.POST.get("quantMaxPlant")
-
+        #Motivo do erro no bugtrack: linha 127 não é usada 
+        try: 
+            if int(quantPlantMax) <= 0:
+                raise ValueError("Os valores precisam ser números positivos.")
+        except(ValueError, TypeError):
+            messages.warning(request, 'O número de plantas precisa ser positivo')
+            return redirect('add-canteiro',espaco_id=espaco_id)
+        contagem = len(nome)
+        armazenar = [".","!","@","#","$","%","&"]
+        for i in range(contagem):
+            if nome[i] in armazenar:
+                messages.warning(request, 'Alguns caracteres especiais não são permitidos')
+                return redirect('add-canteiro',espaco_id=espaco_id)
         # Verifica o limite de canteiros e o número atual
         limiteCant = espaco.quantMaxCanteiro  # Limite de canteiros no espaço
         quantCanteiros = espaco.canteiro_set.count()  # Total de canteiros no espaço
@@ -198,3 +210,7 @@ def adicionar_planta_canteiro(request):
         })
 
     return JsonResponse({'success': False, 'error': 'Método não permitido'}, status=405)
+
+import datetime as date
+def calendario(request):
+    return render(request,'calendario.html')
