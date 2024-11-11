@@ -125,20 +125,22 @@ class AddCanteiro(View):
 
         nome = request.POST.get("nome")
         quantPlantMax = request.POST.get("quantMaxPlant")
-        #Motivo do erro no bugtrack: linha 127 não é usada 
-        try: 
-            if int(quantPlantMax) <= 0:
-                raise ValueError("Os valores precisam ser números positivos.")
-        except(ValueError, TypeError):
-            messages.warning(request, 'O número de plantas precisa ser positivo')
-            return redirect('add-canteiro',espaco_id=espaco_id)
-        contagem = len(nome)
-        armazenar = [".","!","@","#","$","%","&"]
-        for i in range(contagem):
-            if nome[i] in armazenar:
-                messages.warning(request, 'Alguns caracteres especiais não são permitidos')
-                return redirect('add-canteiro',espaco_id=espaco_id)
-        # Verifica o limite de canteiros e o número atual
+
+        # Validação de `quantPlantMax`
+        try:
+            quantPlantMax = int(quantPlantMax)  # Converte para int
+            if quantPlantMax <= 0:
+                raise ValueError("O número de plantas precisa ser positivo.")
+        except (ValueError, TypeError):
+            messages.warning(request, 'A quantidade máxima de plantas deve ser um valor numérico positivo.')
+            return redirect('add-canteiro', espaco_id=espaco_id)
+
+        # Validação de caracteres especiais no nome
+        if any(char in nome for char in [".", "!", "@", "#", "$", "%", "&"]):
+            messages.warning(request, 'Alguns caracteres especiais não são permitidos no nome do canteiro.')
+            return redirect('add-canteiro', espaco_id=espaco_id)
+
+        # Verificação do limite de canteiros no espaço
         limiteCant = espaco.quantMaxCanteiro  # Limite de canteiros no espaço
         quantCanteiros = espaco.canteiro_set.count()  # Total de canteiros no espaço
 
@@ -148,8 +150,9 @@ class AddCanteiro(View):
 
         user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
 
+        # Criação do canteiro com `quantPlantMax`
         try:
-            canteiro = Canteiro(nome=nome, user=user_profile, espaco=espaco)
+            canteiro = Canteiro(nome=nome, user=user_profile, espaco=espaco, quantMaxPlant=quantPlantMax)
             canteiro.save()
             messages.success(request, 'Canteiro adicionado com sucesso.')
             return redirect('home')  # Redireciona para uma URL de sucesso
@@ -192,6 +195,18 @@ def adicionar_planta_canteiro(request):
         canteiro = get_object_or_404(Canteiro, id=canteiro_id)
         planta = get_object_or_404(Planta, id=planta_id)
 
+        # Verifica o número total de plantas já no canteiro
+        total_plantas_no_canteiro = sum(
+            item.quantidade for item in CanteiroPlanta.objects.filter(canteiro=canteiro)
+        )
+
+        # Verifica se o novo total excede o limite
+        if total_plantas_no_canteiro + quantidade > canteiro.quantMaxPlant:
+            return JsonResponse({
+                'success': False,
+                'error': 'Número máximo de plantas para este canteiro atingido.'
+            }, status=400)
+
         # Verifica se a planta já está no canteiro
         canteiro_planta, created = CanteiroPlanta.objects.get_or_create(canteiro=canteiro, planta=planta)
         if not created:
@@ -200,6 +215,7 @@ def adicionar_planta_canteiro(request):
         else:
             # Define a quantidade da nova planta
             canteiro_planta.quantidade = quantidade
+
         canteiro_planta.save()
 
         return JsonResponse({
@@ -210,6 +226,7 @@ def adicionar_planta_canteiro(request):
         })
 
     return JsonResponse({'success': False, 'error': 'Método não permitido'}, status=405)
+
 
 import datetime as date
 def calendario(request):
