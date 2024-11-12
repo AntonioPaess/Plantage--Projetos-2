@@ -23,7 +23,7 @@ class Planta(models.Model):
 class Canteiro(models.Model):
     espaco = models.ForeignKey(Espaco, on_delete=models.CASCADE)
     nome = models.CharField(max_length=20)
-    quantMaxPlant = models.IntegerField(default=10)
+    quantMaxPlant = models.IntegerField()
     plantas = models.ManyToManyField(Planta, through='CanteiroPlanta', blank=True)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
