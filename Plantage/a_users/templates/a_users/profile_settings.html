@@ -28,14 +28,9 @@
             <td class="pb-4 pl-4">
                 {% if user.emailaddress_set.first.verified %}
                 <span class="text-green-500">Verificado</span>{% else %}
-                <span class="text-amber-500">Sem verificação</span>
                 {% endif %}
             </td>
-            <td class="pb-4 pl-4">
-                <a href="{% url 'profile-emailverify' %}" class="font-medium text-blue-600 hover:underline">
-                    {% if not user.emailaddress_set.first.verified %}Verificar{% endif %}
-                </a>
-            </td>
+            
         </tr>
 
         <tr class="border-b">
