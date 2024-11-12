@@ -28,10 +28,13 @@ def HomeView(request):
         })
 
 
+# views.py
 @method_decorator(login_required, name='dispatch')
 class AddPlanta(View):
     def get(self, request):
-        return render(request, 'forms/plantaForms.html')
+        # Inclui todas as plantas para seleção de plantas inimigas
+        plantas = Planta.objects.all()
+        return render(request, 'forms/plantaForms.html', {'plantas': plantas})
 
     def post(self, request):
         name = request.POST.get("nome")
@@ -39,40 +42,19 @@ class AddPlanta(View):
         poda = request.POST.get("ciclo_de_podagem")
         colhe = request.POST.get("ciclo_de_colheita")
         urlImagem = request.POST.get("imagem")
+        plantas_inimigas_ids = request.POST.getlist("plantas_inimigas")
 
+        # Converte os valores para inteiros com verificação de erro
         try:
-            poda = int(poda)  # Converte para float ou use int() se preferir
+            poda = int(poda)
             colhe = int(colhe)
-        
-            if poda <= 0 and colhe <= 0:
+            if poda <= 0 or colhe <= 0:
                 raise ValueError("Os valores precisam ser números positivos.")
-
         except (ValueError, TypeError):
             messages.warning(request, 'O manejo e dias de colheita precisam ser números positivos.')
             return redirect('add')
-        
-        try:
-            colhe = int(colhe)
-        
-            if colhe <= 0:
-                raise ValueError("Os valores precisam ser números positivos.")
 
-        except (ValueError, TypeError):
-            messages.warning(request, 'Os dias de colheita precisam ser números positivos.')
-            return redirect('add')
-        
-        try:
-            poda = int(poda)  
-            
-        
-            if poda <= 0:
-                raise ValueError("Os valores precisam ser números positivos.")
-
-        except (ValueError, TypeError):
-            messages.warning(request, 'O tempo em dias para podar precisa ser  um número positivo.')
-            return redirect('add')
-
-        user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
+        user_profile = Profile.objects.get(user=request.user)
 
         planta = Planta(
             nome=name,
@@ -83,7 +65,13 @@ class AddPlanta(View):
             user=user_profile
         )
         planta.save()
+
+        # Adiciona as plantas inimigas ao relacionamento
+        if plantas_inimigas_ids:
+            planta.plantas_inimigas.add(*plantas_inimigas_ids)
+
         return redirect('home')
+
     
 @method_decorator(login_required, name='dispatch')
 class AddEspaco(View):
@@ -209,13 +197,22 @@ def adicionar_planta_canteiro(request):
                 'error': 'Número máximo de plantas para este canteiro atingido.'
             }, status=400)
 
-        # Verifica se a planta já está no canteiro
+        # Verificação de plantas inimigas já presentes no canteiro
+        plantas_existentes = CanteiroPlanta.objects.filter(canteiro=canteiro).values_list('planta', flat=True)
+        plantas_inimigas = planta.plantas_inimigas.values_list('id', flat=True)
+        
+        # Interseção para verificar se alguma planta inimiga já está no canteiro
+        if set(plantas_existentes) & set(plantas_inimigas):
+            return JsonResponse({
+                'success': False,
+                'error': 'Esta planta possui plantas inimigas no mesmo canteiro.'
+            }, status=400)
+
+        # Adiciona ou atualiza a quantidade de plantas no canteiro
         canteiro_planta, created = CanteiroPlanta.objects.get_or_create(canteiro=canteiro, planta=planta)
         if not created:
-            # Atualiza a quantidade da planta existente
             canteiro_planta.quantidade += quantidade
         else:
-            # Define a quantidade da nova planta
             canteiro_planta.quantidade = quantidade
 
         canteiro_planta.save()
@@ -228,6 +225,7 @@ def adicionar_planta_canteiro(request):
         })
 
     return JsonResponse({'success': False, 'error': 'Método não permitido'}, status=405)
+
 
 
 

@@ -11,12 +11,16 @@ class Espaco(models.Model):
         return self.nome
 
 class Planta(models.Model):
-    nome = models.CharField(max_length=20)
-    necessidade_de_nutrientes = models.CharField(max_length=20)
+    nome = models.CharField(max_length=100)
+    necessidade_de_nutrientes = models.TextField()
     ciclo_de_podagem = models.IntegerField()
     ciclo_de_colheita = models.IntegerField()
-    imagem = models.URLField(max_length=200, default=None)
+    imagem = models.URLField()
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    
+    # Novo campo para plantas inimigas
+    plantas_inimigas = models.ManyToManyField('self', blank=True, symmetrical=True)
+
     def __str__(self):
         return self.nome
 

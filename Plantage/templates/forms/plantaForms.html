@@ -103,57 +103,54 @@
     
     {% include 'includes/header.html' %}
 
-    
     <form action="{% url 'add' %}" method="POST" class="flex gap-2 px-8 py-24" autocomplete="off">
         {% csrf_token %}
         
         <div class="ml-32 mb-16 bg-white rounded-2xl md:drop-shadow-2xl shadow-black w-full p-8 max-w-3xl mx-auto p--20 font-bold">
             
-            
             <h2 class="text-black" for="nome">Nome:</h2>
-            <div class="">
+            <div>
                 <input type="text" name="nome" id="nome" placeholder="Digite o nome da planta" required>
-                <br>
-                <br>
-                <h2 class="text-black" for="nome">Dias para o Manejo da planta:</h2>
-                
-                
-                <input type="number" id="ciclo_de_podagem" name="ciclo_de_podagem" placeholder="Digite o numero aqui"
-                step="1" required>
-                <br>
-                <br>
-                <h2 class="text-black" for="nome">Dias para a colheita:</h2>
-                
-                <input type="number" id="ciclo_de_colheita" name="ciclo_de_colheita" placeholder="Digite o numero aqui"
-                step="1" required>
-                <br>
-                <br>
-                
+                <br><br>
+
+                <h2 class="text-black" for="ciclo_de_podagem">Dias para o Manejo da planta:</h2>
+                <input type="number" id="ciclo_de_podagem" name="ciclo_de_podagem" placeholder="Digite o numero aqui" step="1" required>
+                <br><br>
+
+                <h2 class="text-black" for="ciclo_de_colheita">Dias para a colheita:</h2>
+                <input type="number" id="ciclo_de_colheita" name="ciclo_de_colheita" placeholder="Digite o numero aqui" step="1" required>
+                <br><br>
+
                 <div class="inputdiv text-black">
                     <h2 class="text-black" for="imagem">URL da Imagem:</h2>
                     <input type="url" name="imagem" id="imagem" placeholder="Digite a URL da imagem" required>
                 </div>
-               
-             
-                <h2 class="text-white" for="nome">Necessidade de Nutrientes:</h2>
+                <br>
+
+                <h2 class="text-white" for="necessidade_de_nutrientes">Necessidade de Nutrientes:</h2>
                 <select name="necessidade_de_nutrientes" id="necessidade_de_nutrientes" required>
                     <option value="">Selecione a necessidade de Nutrientes da Planta</option>
                     <option value="Baixa">Baixa</option>
                     <option value="Media">Média</option>
                     <option value="Alta">Alta</option>
                 </select>
-                
+                <br><br>
+
+                <!-- Adiciona a seleção de plantas inimigas -->
+                <h2 class="text-white" for="plantas_inimigas">Selecione as Plantas Inimigas:</h2>
+                <select name="plantas_inimigas" id="plantas_inimigas" multiple class="textarea">
+                    {% for planta in plantas %}
+                        <option value="{{ planta.id }}">{{ planta.nome }}</option>
+                    {% endfor %}
+                </select>
             </div>
-            <br>
-            <br>
-            <div class=" text-center">
+            <br><br>
+
+            <div class="text-center">
                 <button type="submit" class="btn btn-primary">Enviar</button>
             </div>
         </div>
-        
     </form>
-    
-    
 
 </body>
 
