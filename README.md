@@ -84,7 +84,6 @@
 - **Marco Maciel** - <a href="mailto:magm@cesar.school">📧</a> - <a href="https://www.linkedin.com/in/marcomaciel2210/"><img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="20"></a>
 - **Clara Neves** - <a href="mailto:mcsan@cesar.school">📧</a> - <a href="https://www.linkedin.com/in/claranevess/"><img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="20"></a>
 - **Galileu Calaça** - <a href="mailto:gcmm@cesar.school">📧</a> - <a href="https://www.linkedin.com/in/galileu-cala%C3%A7a-369726241/"><img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="20"></a>
-- **Arthur Gabriel** - <a href="mailto:agts@cesar.school">📧</a>
 
 ### Design:
 
@@ -94,7 +93,7 @@
 - **Thiago Soares** - <a href="mailto:tsms@cesar.school">📧</a>
 
 
-## 🙋 Criado por:
+## 🙋 Contributors:
 
 <a href="https://github.com/AntonioPaess/Plantage--Projetos-2/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=AntonioPaess/Plantage--Projetos-2" />
