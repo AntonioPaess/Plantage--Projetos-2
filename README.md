@@ -100,11 +100,5 @@
   <img src="https://contrib.rocks/image?repo=AntonioPaess/Plantage--Projetos-2" />
 </a>
 
-# Licença 📜
-
-Este projeto está licenciado sob a [Licença MIT](LICENSE).
-  
-</div>
-
 
 
