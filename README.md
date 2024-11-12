@@ -98,7 +98,7 @@
 
 ## ✨ Contribuição
 <a href="https://github.com/AntonioPaess/Plantage--Projetos-2/graphs/contributors">
-  <img src="https://contrib.rocks/image?AntonioPaess/Plantage--Projetos-2" />
+  <img src="https://contrib.rocks/image?repo=AntonioPaess/Plantage--Projetos-2" />
 </a>
 
 # Licença 📜
