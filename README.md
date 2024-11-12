@@ -96,28 +96,14 @@
 
 ## 🙋 Criado por:
 
-<div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px;">
-    <a href="https://github.com/AntonioPaess">
-        <img src="https://avatars.githubusercontent.com/u/123177984?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-    <a href="https://github.com/Caio-Almeida-A">
-        <img src="https://avatars.githubusercontent.com/u/162466781?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-    <a href="https://github.com/Matheuslh">
-        <img src="https://avatars.githubusercontent.com/u/168059030?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-    <a href="https://github.com/oMarcoMaciel">
-        <img src="https://avatars.githubusercontent.com/u/126691818?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-    <a href="https://github.com/claranevess">
-        <img src="https://avatars.githubusercontent.com/u/166565110?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-    <a href="https://github.com/GalileuCMMoares">
-        <img src="https://avatars.githubusercontent.com/u/165906088?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-    <a href="https://github.com/arthur15tuca">
-        <img src="https://avatars.githubusercontent.com/u/127034386?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
+## ✨ Contribuição
+<a href="https://github.com/AntonioPaess/Plantage--Projetos-2/graphs/contributors">
+  <img src="https://contrib.rocks/image?AntonioPaess/Plantage--Projetos-2" />
+</a>
+
+# Licença 📜
+
+Este projeto está licenciado sob a [Licença MIT](LICENSE).
   
 </div>
 
