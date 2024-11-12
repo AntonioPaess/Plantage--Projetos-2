@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+import calendar
+from datetime import datetime
 
 
 
@@ -228,6 +230,26 @@ def adicionar_planta_canteiro(request):
     return JsonResponse({'success': False, 'error': 'Método não permitido'}, status=405)
 
 
-import datetime as date
+
 def calendario(request):
-    return render(request,'calendario.html')
+    user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
+    plantas = Planta.objects.filter(user=user_profile)
+
+    now = datetime.now()
+    yy = now.year
+    mm = now.month
+    calendario_mes = calendar.monthcalendar(yy, mm)
+    nome_mes = calendar.month_name[mm]
+
+    ctx = {
+        'plantas': plantas,
+        'meses': calendar.month_name,
+        'calendario': calendario_mes,
+        'yy': yy,
+        'mm': mm,
+        'nome_mes': nome_mes,
+    }
+
+    return render(request, 'calendario.html', ctx)
+    
+
