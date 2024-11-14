@@ -84,7 +84,6 @@
 - **Marco Maciel** - <a href="mailto:magm@cesar.school">📧</a> - <a href="https://www.linkedin.com/in/marcomaciel2210/"><img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="20"></a>
 - **Clara Neves** - <a href="mailto:mcsan@cesar.school">📧</a> - <a href="https://www.linkedin.com/in/claranevess/"><img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="20"></a>
 - **Galileu Calaça** - <a href="mailto:gcmm@cesar.school">📧</a> - <a href="https://www.linkedin.com/in/galileu-cala%C3%A7a-369726241/"><img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="20"></a>
-- **Arthur Gabriel** - <a href="mailto:agts@cesar.school">📧</a>
 
 ### Design:
 
@@ -94,32 +93,11 @@
 - **Thiago Soares** - <a href="mailto:tsms@cesar.school">📧</a>
 
 
-## 🙋 Criado por:
+## 🙋 Contributors:
 
-<div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px;">
-    <a href="https://github.com/AntonioPaess">
-        <img src="https://avatars.githubusercontent.com/u/123177984?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-    <a href="https://github.com/Caio-Almeida-A">
-        <img src="https://avatars.githubusercontent.com/u/162466781?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-    <a href="https://github.com/Matheuslh">
-        <img src="https://avatars.githubusercontent.com/u/168059030?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-    <a href="https://github.com/oMarcoMaciel">
-        <img src="https://avatars.githubusercontent.com/u/126691818?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-    <a href="https://github.com/claranevess">
-        <img src="https://avatars.githubusercontent.com/u/166565110?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-    <a href="https://github.com/GalileuCMMoares">
-        <img src="https://avatars.githubusercontent.com/u/165906088?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-    <a href="https://github.com/arthur15tuca">
-        <img src="https://avatars.githubusercontent.com/u/127034386?v=4" style="border-radius: 50%; width: 100px; height: 100px;">
-    </a>
-  
-</div>
+<a href="https://github.com/AntonioPaess/Plantage--Projetos-2/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=AntonioPaess/Plantage--Projetos-2" />
+</a>
 
 
 
