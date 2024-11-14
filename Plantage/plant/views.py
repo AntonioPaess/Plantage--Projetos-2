@@ -32,8 +32,10 @@ def HomeView(request):
 @method_decorator(login_required, name='dispatch')
 class AddPlanta(View):
     def get(self, request):
-        # Inclui todas as plantas para seleção de plantas inimigas
-        plantas = Planta.objects.all()
+        user_profile = Profile.objects.get(user=request.user)
+        # Filtra as plantas associadas ao usuário atual
+        plantas = Planta.objects.filter(user=user_profile)
+        
         return render(request, 'forms/plantaForms.html', {'plantas': plantas})
 
     def post(self, request):
@@ -66,9 +68,11 @@ class AddPlanta(View):
         )
         planta.save()
 
-        # Adiciona as plantas inimigas ao relacionamento
+        # Adiciona as plantas inimigas ao relacionamento, filtrando as plantas inimigas que pertencem ao mesmo usuário
         if plantas_inimigas_ids:
-            planta.plantas_inimigas.add(*plantas_inimigas_ids)
+            # Certifica-se de que as IDs pertencem a plantas do usuário atual
+            plantas_inimigas = Planta.objects.filter(id__in=plantas_inimigas_ids, user=user_profile)
+            planta.plantas_inimigas.add(*plantas_inimigas)
 
         return redirect('home')
 
