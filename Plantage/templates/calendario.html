@@ -1,29 +1,79 @@
 {% extends 'layouts/blank.html' %}
+{% load custom_filters %}
 {% block content %}
 <div class="flex flex-col items-center justify-center min-h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full h-full">
-        <h1 id="meses" class="text-center text-4xl font-bold mb-6">{{ nome_mes }} {{ yy }}</h1>
-        <div class="overflow-x-auto w-full h-full">
-            <table class="w-full h-full table-fixed">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-11/12 max-w-6xl">
+        <!-- Cabeçalho com Navegação -->
+        <div class="flex justify-between items-center mb-6">
+            <a href="?mes={{ mes_anterior }}&ano={{ ano_anterior }}" 
+               class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                <span class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Mês Anterior
+                </span>
+            </a>
+            
+            <h1 class="text-center text-4xl font-bold text-green-700">{{ nome_mes }} {{ yy }}</h1>
+            
+            <a href="?mes={{ proximo_mes }}&ano={{ proximo_ano }}" 
+               class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                <span class="flex items-center">
+                    Próximo Mês
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </span>
+            </a>
+        </div>
+
+        <!-- Calendário -->
+        <div class="overflow-x-auto w-full">
+            <table id="calendario" class="w-full border-collapse bg-white rounded-lg overflow-hidden">
                 <thead>
-                    <tr class="bg-gray-200">
-                        <th class="w-1/7 py-2">Domingo</th>
-                        <th class="w-1/7 py-2">Segunda</th>
-                        <th class="w-1/7 py-2">Terça</th>
-                        <th class="w-1/7 py-2">Quarta</th>
-                        <th class="w-1/7 py-2">Quinta</th>
-                        <th class="w-1/7 py-2">Sexta</th>
-                        <th class="w-1/7 py-2">Sábado</th>
+                    <tr class="bg-green-600 text-white">
+                        <th class="p-3 text-center">Dom</th>
+                        <th class="p-3 text-center">Seg</th>
+                        <th class="p-3 text-center">Ter</th>
+                        <th class="p-3 text-center">Qua</th>
+                        <th class="p-3 text-center">Qui</th>
+                        <th class="p-3 text-center">Sex</th>
+                        <th class="p-3 text-center">Sáb</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for semana in calendario %}
-                    <tr class="h-1/6">
+                    <tr>
                         {% for dia in semana %}
                         {% if dia == 0 %}
-                        <td class="border h-24 w-24"></td>
+                        <td class="border border-gray-200 p-2 h-32 w-32 bg-gray-50"></td>
                         {% else %}
-                        <td class="border text-center align-middle h-24 w-24">{{ dia }}</td>
+                        <td class="border border-gray-200 p-2 h-32 w-32 hover:bg-gray-50 transition-colors relative" data-dia="{{ dia }}">
+                            <div class="flex flex-col h-full">
+                                <span class="text-right text-gray-500 mb-1">{{ dia }}</span>
+                                <div class="atividades flex flex-wrap gap-1 justify-center flex-grow">
+                                    {% if atividades_por_dia|get_item:dia %}
+                                        {% for atividade in atividades_por_dia|get_item:dia %}
+                                        <div class="relative group">
+                                            <div class="w-8 h-8 rounded-full p-1 cursor-pointer transition-transform hover:scale-110 
+                                                      {% if atividade.atividade == 'Podar' %}bg-green-500{% else %}bg-yellow-500{% endif %}">
+                                                <img src="{{ atividade.planta_imagem }}" 
+                                                     alt="{{ atividade.planta }}"
+                                                     class="w-full h-full rounded-full object-cover">
+                                            </div>
+                                            <!-- Tooltip Melhorado -->
+                                            <div class="absolute hidden group-hover:block bg-black text-white text-xs rounded-lg p-2 z-10 
+                                                        -mt-1 transform -translate-x-1/2 left-1/2 whitespace-nowrap shadow-lg">
+                                                <strong>{{ atividade.planta }}</strong><br>
+                                                {{ atividade.atividade }} - {{ atividade.data_formatada }}
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
                         {% endif %}
                         {% endfor %}
                     </tr>
@@ -31,6 +81,30 @@
                 </tbody>
             </table>
         </div>
+        
+        <!-- Legenda Melhorada -->
+        <div class="mt-6 flex justify-center gap-6">
+            <div class="flex items-center bg-white px-4 py-2 rounded-lg shadow">
+                <div class="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+                <span class="text-sm font-medium">Podar</span>
+            </div>
+            <div class="flex items-center bg-white px-4 py-2 rounded-lg shadow">
+                <div class="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
+                <span class="text-sm font-medium">Colher</span>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    /* Animações suaves */
+    .group:hover .group-hover\:block {
+        animation: fadeIn 0.2s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px) translateX(-50%); }
+        to { opacity: 1; transform: translateY(0) translateX(-50%); }
+    }
+</style>
 {% endblock %}

@@ -1,5 +1,6 @@
 from django.db import models
 from a_users.models import Profile
+from django.utils import timezone
 
 class Espaco(models.Model):
     nome = models.CharField(max_length=20)
@@ -39,6 +40,7 @@ class CanteiroPlanta(models.Model):
     canteiro = models.ForeignKey(Canteiro, on_delete=models.CASCADE)
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE)
     quantidade = models.PositiveIntegerField(default=1)  # Quantidade de plantas no canteiro
+    data_plantio = models.DateField(default=timezone.now)
 
     class Meta:
         unique_together = ('canteiro', 'planta')  # Garante que a combinação de canteiro e planta seja única

@@ -3,6 +3,18 @@
 {% block content %}
 
 <main class="gap-5 mx-auto w-11/12 p-8">
+    {% if atividades %}
+    <h2>Próximas Atividades</h2>
+    <ul>
+    {% for atividade in atividades %}
+        <li>
+            {{ atividade.data|date:"d/m/Y" }} - {{ atividade.atividade }} {{ atividade.planta }}
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+        <p>Não há próximas atividades.</p>
+    {% endif %}
     <!-- Botão para adicionar novo espaço -->
     <a href="{% url 'add-espaco' %}">
         <div class="block add-block flex flex-col justify-center items-center mx-auto rounded-lg transition-transform duration-300 hover:scale-105 hover:shadow-lg ml-0">
@@ -245,5 +257,8 @@
             icon.innerHTML = '&#9650;'; // seta para cima
         }
     }
+
+
+
 </script>
 {% endblock %}
