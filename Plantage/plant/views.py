@@ -1,41 +1,38 @@
-from django.shortcuts import redirect, render
-from django.http import HttpResponse
+from django.shortcuts import redirect, render, get_object_or_404
+from django.http import HttpResponse, JsonResponse
 from django.views import View
 from plant.models import *
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib import messages
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 import calendar
-from datetime import datetime
-
-
+from datetime import datetime, date, timedelta
+from operator import itemgetter
 
 @login_required
 def HomeView(request):
-        user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
-        espacos = Espaco.objects.filter(user=user_profile)
-        canteiros = Canteiro.objects.filter(user=user_profile)
-        plantas = Planta.objects.filter(user=user_profile)
+    user_profile = Profile.objects.get(user=request.user)
+    espacos = Espaco.objects.filter(user=user_profile)
+    canteiros = Canteiro.objects.filter(user=user_profile)
+    plantas = Planta.objects.filter(user=user_profile)
 
-        # Renderiza o template passando os canteiros com suas plantas associadas
-        return render(request, 'home.html', {
-            'espacos': espacos,
-            'canteiros': canteiros,  # Os canteiros já terão suas plantas associadas devido ao prefetch_related
-            'plantas': plantas
-        })
+    # Chama a função AtividadeDiaria para obter as atividades
+    atividades = AtividadeDiaria(user_profile)
 
+    return render(request, 'home.html', {
+        'espacos': espacos,
+        'canteiros': canteiros,
+        'plantas': plantas,
+        'atividades': atividades,  # Passa as atividades para o template
+    })
 
-# views.py
 @method_decorator(login_required, name='dispatch')
 class AddPlanta(View):
     def get(self, request):
         user_profile = Profile.objects.get(user=request.user)
-        # Filtra as plantas associadas ao usuário atual
         plantas = Planta.objects.filter(user=user_profile)
-        
         return render(request, 'forms/plantaForms.html', {'plantas': plantas})
 
     def post(self, request):
@@ -46,7 +43,6 @@ class AddPlanta(View):
         urlImagem = request.POST.get("imagem")
         plantas_inimigas_ids = request.POST.getlist("plantas_inimigas")
 
-        # Converte os valores para inteiros com verificação de erro
         try:
             poda = int(poda)
             colhe = int(colhe)
@@ -68,37 +64,30 @@ class AddPlanta(View):
         )
         planta.save()
 
-        # Adiciona as plantas inimigas ao relacionamento, filtrando as plantas inimigas que pertencem ao mesmo usuário
         if plantas_inimigas_ids:
-            # Certifica-se de que as IDs pertencem a plantas do usuário atual
             plantas_inimigas = Planta.objects.filter(id__in=plantas_inimigas_ids, user=user_profile)
             planta.plantas_inimigas.add(*plantas_inimigas)
 
         return redirect('home')
 
-    
 @method_decorator(login_required, name='dispatch')
 class AddEspaco(View):
     def get(self, request):
         return render(request, 'forms/areaForms.html')
-    
+
     def post(self, request):
         name = request.POST.get("nome")
         tipoSolo = request.POST.get("tipo_de_solo")
         quantCante = request.POST.get("quantMaxCanteiro")
         try:
-            quantCante = int(quantCante)  # Converte para float ou use int() se preferir
-            
-        
+            quantCante = int(quantCante)
             if quantCante <= 0:
                 raise ValueError("Os valores precisam ser números positivos.")
-
         except (ValueError, TypeError):
             messages.warning(request, 'A quantidade de canteiros no seu espaço necessita ser um valor maior que zero.')
             return redirect('add-espaco')
 
-        user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
-
+        user_profile = Profile.objects.get(user=request.user)
         area = Espaco(
             nome=name,
             tipo_de_solo=tipoSolo,
@@ -111,73 +100,58 @@ class AddEspaco(View):
 @method_decorator(login_required, name='dispatch')
 class AddCanteiro(View):
     def get(self, request, espaco_id):
-        espaco = get_object_or_404(Espaco, id=espaco_id)  # Carrega o espaço correspondente
+        espaco = get_object_or_404(Espaco, id=espaco_id)
         return render(request, 'forms/canteiroForms.html', {'espaco': espaco})
 
     def post(self, request, espaco_id):
-        espaco = get_object_or_404(Espaco, id=espaco_id)  # Obtém o espaço
-
+        espaco = get_object_or_404(Espaco, id=espaco_id)
         nome = request.POST.get("nome")
         quantPlantMax = request.POST.get("quantMaxPlant")
 
-        # Validação de `quantPlantMax`
         try:
-            quantPlantMax = int(quantPlantMax)  # Converte para int
+            quantPlantMax = int(quantPlantMax)
             if quantPlantMax <= 0:
                 raise ValueError("O número de plantas precisa ser positivo.")
         except (ValueError, TypeError):
             messages.warning(request, 'A quantidade máxima de plantas deve ser um valor numérico positivo.')
             return redirect('add-canteiro', espaco_id=espaco_id)
 
-        # Validação de caracteres especiais no nome
         if any(char in nome for char in [".", "!", "@", "#", "$", "%", "&"]):
             messages.warning(request, 'Alguns caracteres especiais não são permitidos no nome do canteiro.')
             return redirect('add-canteiro', espaco_id=espaco_id)
 
-        # Verificação do limite de canteiros no espaço
-        limiteCant = espaco.quantMaxCanteiro  # Limite de canteiros no espaço
-        quantCanteiros = espaco.canteiro_set.count()  # Total de canteiros no espaço
+        limiteCant = espaco.quantMaxCanteiro
+        quantCanteiros = espaco.canteiro_set.count()
 
         if quantCanteiros >= limiteCant:
             messages.warning(request, 'O número máximo de canteiros para este espaço já foi atingido.')
             return redirect('add-canteiro', espaco_id=espaco_id)
 
-        user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
+        user_profile = Profile.objects.get(user=request.user)
 
-        # Criação do canteiro com `quantPlantMax`
         try:
             canteiro = Canteiro(nome=nome, user=user_profile, espaco=espaco, quantMaxPlant=quantPlantMax)
             canteiro.save()
             messages.success(request, 'Canteiro adicionado com sucesso.')
-            return redirect('home')  # Redireciona para uma URL de sucesso
+            return redirect('home')
         except Exception as e:
             messages.error(request, f'Erro ao adicionar canteiro: {str(e)}')
             return render(request, 'forms/canteiroForms.html', {'espaco': espaco})
 
-
 class ListAllView(View):
     def get(self, request):
-        user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
+        user_profile = Profile.objects.get(user=request.user)
         plantas = Planta.objects.filter(user=user_profile)
-
-        ctx = {
-            'allPlantas': plantas, 
-        }
-
+        ctx = {'allPlantas': plantas}
         return render(request, 'visualizarTodas.html', ctx)
 
 class PlantaDetail(View):
     def get(self, request, id):
-
         ctx = {'planta': Planta.objects.filter(id=id).first()}
-
         return render(request, 'visualizarPlanta.html', ctx)
 
-
-def testeview(request): 
+def testeview(request):
     return render(request, 'teste.html')
-
-
 
 @login_required
 def adicionar_planta_canteiro(request):
@@ -231,27 +205,104 @@ def adicionar_planta_canteiro(request):
     return JsonResponse({'success': False, 'error': 'Método não permitido'}, status=405)
 
 
-
-
+@login_required
 def calendario(request):
-    user_profile = Profile.objects.get(user=request.user)  # Obtém o perfil do usuário logado
+    user_profile = Profile.objects.get(user=request.user)
     plantas = Planta.objects.filter(user=user_profile)
 
-    now = datetime.now()
-    yy = now.year
-    mm = now.month
+    # Pegar o mês e ano da URL ou usar o atual
+    yy = int(request.GET.get('ano', datetime.now().year))
+    mm = int(request.GET.get('mes', datetime.now().month))
+
+    # Calcular mês anterior e próximo
+    if mm == 1:
+        mes_anterior = 12
+        ano_anterior = yy - 1
+    else:
+        mes_anterior = mm - 1
+        ano_anterior = yy
+
+    if mm == 12:
+        proximo_mes = 1
+        proximo_ano = yy + 1
+    else:
+        proximo_mes = mm + 1
+        proximo_ano = yy
+
+    calendar.setfirstweekday(calendar.SUNDAY)
     calendario_mes = calendar.monthcalendar(yy, mm)
     nome_mes = calendar.month_name[mm]
 
+    # Obter as atividades
+    atividades = AtividadeDiaria(user_profile)
+
+    # Criar um dicionário para mapear dias às atividades
+    atividades_por_dia = {}
+    for atividade in atividades:
+        data_atividade = atividade['data']
+        if data_atividade.month == mm and data_atividade.year == yy:
+            dia = data_atividade.day
+            if dia not in atividades_por_dia:
+                atividades_por_dia[dia] = []
+            atividades_por_dia[dia].append(atividade)
+
     ctx = {
         'plantas': plantas,
-        'meses': calendar.month_name,
         'calendario': calendario_mes,
         'yy': yy,
         'mm': mm,
         'nome_mes': nome_mes,
+        'atividades_por_dia': atividades_por_dia,
+        'mes_anterior': mes_anterior,
+        'ano_anterior': ano_anterior,
+        'proximo_mes': proximo_mes,
+        'proximo_ano': proximo_ano
     }
 
     return render(request, 'calendario.html', ctx)
-    
 
+
+def AtividadeDiaria(user_profile):
+    canteiros_plantas = CanteiroPlanta.objects.filter(canteiro__user=user_profile)
+    atividades = []
+    hoje = date.today()
+
+    for cp in canteiros_plantas:
+        if not cp.data_plantio:
+            continue
+            
+        data_plantio = cp.data_plantio
+        ciclo_podagem = cp.planta.ciclo_de_podagem
+        ciclo_colheita = cp.planta.ciclo_de_colheita
+        planta_imagem = cp.planta.imagem or ''
+
+        # Calcula próxima podagem
+        if ciclo_podagem and ciclo_podagem > 0:
+            dias_desde_plantio = max(0, (hoje - data_plantio).days)
+            proxima_podagem_em_dias = ciclo_podagem - (dias_desde_plantio % ciclo_podagem)
+            proxima_data_podagem = hoje + timedelta(days=proxima_podagem_em_dias)
+            
+            atividades.append({
+                'planta': cp.planta.nome,
+                'planta_imagem': planta_imagem,
+                'atividade': 'Podar',
+                'data': proxima_data_podagem,  # Mantém o objeto date para ordenação
+                'data_formatada': proxima_data_podagem.strftime('%d/%m/%Y')  # Data formatada para exibição
+            })
+
+        # Calcula próxima colheita
+        if ciclo_colheita and ciclo_colheita > 0:
+            dias_desde_plantio = max(0, (hoje - data_plantio).days)
+            proxima_colheita_em_dias = ciclo_colheita - (dias_desde_plantio % ciclo_colheita)
+            proxima_data_colheita = hoje + timedelta(days=proxima_colheita_em_dias)
+            
+            atividades.append({
+                'planta': cp.planta.nome,
+                'planta_imagem': planta_imagem,
+                'atividade': 'Colher',
+                'data': proxima_data_colheita,  # Mantém o objeto date para ordenação
+                'data_formatada': proxima_data_colheita.strftime('%d/%m/%Y')  # Data formatada para exibição
+            })
+
+    # Ordena as atividades por data
+    return sorted(atividades, key=lambda x: x['data'])
