@@ -1,7 +1,7 @@
 {% load static %}
 {% load custom_filters %}  <!-- Adicionar esta linha no topo do arquivo -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -104,11 +104,11 @@
 <body class="min-h-screen bg-cover bg-center" style="background-image: url('{% static 'background.PNG' %}');">
     {% include 'includes/header.html' %}
     <div class="flex flex-col items-center justify-center min-h-screen">
-        <div class="bg-white p-8 rounded-xl shadow-lg w-11/12 max-w-6xl">
+        <div class="bg-black/60 p-8 rounded-xl shadow-lg w-11/12 max-w-6xl">
             <!-- Cabeçalho com Navegação -->
             <div class="flex justify-between items-center mb-6">
                 <a href="?mes={{ mes_anterior }}&ano={{ ano_anterior }}"
-                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    class="bg-green-800/80 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
                     <span class="flex items-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -117,10 +117,10 @@
                     </span>
                 </a>
 
-                <h1 class="text-center text-4xl font-bold text-green-700">{{ nome_mes }} {{ yy }}</h1>
+                <h1 class="text-center text-4xl font-bold text-white">{{ nome_mes }} {{ yy }}</h1>
 
                 <a href="?mes={{ proximo_mes }}&ano={{ proximo_ano }}"
-                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    class="bg-green-800/80 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
                     <span class="flex items-center">
                         Próximo Mês
                         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,9 +132,9 @@
 
             <!-- Calendário -->
             <div class="overflow-x-auto w-full">
-                <table id="calendario" class="w-full border-collapse bg-white rounded-lg overflow-hidden">
+                <table id="calendario" class="w-full border-collapse bg-gray-200/80 rounded-lg overflow-hidden">
                     <thead>
-                        <tr class="bg-green-600 text-white">
+                        <tr class="bg-green-800/80 text-white">
                             <th class="p-3 text-center">Domingo</th>
                             <th class="p-3 text-center">Segunda</th>
                             <th class="p-3 text-center">Terça</th>
@@ -149,12 +149,12 @@
                         <tr>
                             {% for dia in semana %}
                             {% if dia == 0 %}
-                            <td class="border border-gray-200 p-2 h-32 w-32 bg-gray-50"></td>
+                            <td class="border border-gray-400/80 p-2 h-32 w-32 bg-gray-200"></td>
                             {% else %}
-                            <td class="border border-gray-200 p-2 h-32 w-32 hover:bg-gray-50 transition-colors relative"
+                            <td class="border border-gray-400/80 p-2 h-32 w-32 hover:bg-gray-200/80 transition-colors relative"
                                 data-dia="{{ dia }}">
                                 <div class="flex flex-col h-full">
-                                    <span class="text-right text-gray-500 mb-1">{{ dia }}</span>
+                                    <span class="text-right text-black mb-1">{{ dia }}</span>
                                     <div class="atividades flex flex-wrap gap-1 justify-center flex-grow">
                                         {% if atividades_por_dia|get_item:dia %}
                                         {% for atividade in atividades_por_dia|get_item:dia %}
@@ -162,7 +162,7 @@
                                             <div
                                                 class="w-8 h-8 rounded-full p-1 cursor-pointer transition-transform hover:scale-110 
                                                       {% if atividade.atividade == 'Manejar' %}bg-green-500{% else %}bg-yellow-500{% endif %}">
-                                                <img src="{{ atividade.planta_imagem }}" alt="{{ atividade.planta }}"
+                                                <img src="{{ atividade.planta_imagem.url }}" alt="{{ atividade.planta }}"
                                                     class="w-full h-full rounded-full object-cover">
                                             </div>
                                             <!-- Tooltip Melhorado -->

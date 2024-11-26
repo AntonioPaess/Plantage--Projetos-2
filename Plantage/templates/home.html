@@ -12,20 +12,10 @@
         {% endfor %}
     {% endif %}
     
-    {% if atividades %}
-    <h2 class="mb-2">Próximas Atividades</h2>
-    <ul class="mb-3">
-        {% for atividade in atividades %}
-        <li>
-            {{ atividade.data|date:"d/m/Y" }} - {{ atividade.atividade }} {{ atividade.planta }}
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p class="mb-3">Não há próximas atividades.</p>
-    {% endif %}
+    
+    
 
-    <!-- Bot����o para adicionar novo espaço -->
+    <!-- Botão para adicionar novo espaço -->
     <div class="flex justify-center mb-3">
         <a href="{% url 'add-espaco' %}" class="w-48 bg-green-800/80 hover:bg-green-800 text-white rounded-2xl">
             <div
@@ -43,8 +33,47 @@
         </a>
     </div>
     <br>
+    <!-- Menu suspenso de atividades -->
+    <div class="relative flex flex-col items-center mb-2">
+        <div class="atividades-menu bg-gray-200/70 border-2 border-gray-300 p-2 rounded-xl flex justify-between items-center cursor-pointer transition-transform duration-300 hover:scale-105" onclick="toggleAtividades()">
+            <span class="text-base sm:text-lg md:text-xl font-semibold text-black">Atividades</span>
+            <span id="atividades-icon">&#9660;</span>
+        </div>
+        <div id="atividades-content" class="absolute mt-2 w-64 bg-gray-200/70 border border-gray-300 rounded-xl shadow-lg z-10 hidden" style="top: 100%;">
+            {% if atividades %}
+                {% regroup atividades by data as atividades_por_data %}
+                {% for grupo in atividades_por_data %}
+                <p class="text-sm font-semibold text-gray-600">Data: {{ grupo.grouper|date:"d/m/Y" }}</p>
+                {% for atividade in grupo.list %}
+                <div class="bg-white/90 p-1 rounded-xl mb-1 shadow-sm border border-gray-200">
+                    <div class="flex items-center gap-1 mt-1">
+                        {% if atividade.planta_imagem %}
+                            <img src="{{ atividade.planta_imagem.url }}" alt="{{ atividade.planta }}" class="w-12 h-12 rounded-full object-cover">
+                        {% else %}
+                            <img src="{% static 'img/default-plant.png' %}" alt="Imagem padrão" class="w-12 h-12 rounded-full object-cover">
+                        {% endif %}
+                        <div>
+                            <p class="font-medium">{{ atividade.atividade }} {{ atividade.planta }}</p>
+                            <p class="text-sm text-gray-600">{{ atividade.espaco }}</p>
+                            <p class="text-sm text-gray-600">{{ atividade.canteiro }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endfor %}
+            {% else %}
+                <p class="text-gray-600 p-2">Não há atividades programadas.</p>
+            {% endif %}
+            <a href="{% url 'calendario' %}" class="block text-center text-black border border-gray-300 rounded-xl p-2 hover:bg-gray-100 transition-colors">
+                <img src="{% static 'Calendário.PNG' %}" alt="Calendário" class="inline w-6 h-6 mr-2">
+                Ver calendário completo
+            </a>
+        </div>
+    </div>
+
     <!--Local onde ficará atividades-->
     <br><br>
+
 
     <!-- Renderizando todos os espaços existentes -->
     <div class="mt-2"> <!-- Reduzido margin-top -->
@@ -301,6 +330,20 @@
             }, 3000);
         });
     });
+
+    // Função para alternar a visibilidade do menu de atividades
+    function toggleAtividades() {
+        const content = document.getElementById('atividades-content');
+        const icon = document.getElementById('atividades-icon');
+        
+        content.classList.toggle('hidden');
+        
+        if (content.classList.contains('hidden')) {
+            icon.innerHTML = '&#9660;'; // seta para baixo
+        } else {
+            icon.innerHTML = '&#9650;'; // seta para cima
+        }
+    }
 
 </script>
 {% endblock %}
