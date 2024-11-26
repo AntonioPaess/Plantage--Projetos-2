@@ -1,29 +1,51 @@
 {% extends 'layouts/blank.html' %}
+
 {% block content %}
+<div class="min-h-screen flex items-center justify-center bg-cover bg-center">
+    <form action="{% url 'add-canteiro' espaco.id %}" method="POST" class="bg-white rounded-3xl p-8 shadow-lg w-full max-w-md" autocomplete="off">
+        {% csrf_token %}
+        
+        <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">Adicionar canteiro</h1>
 
+        <!-- Nome do Espaço -->
+        <div class="mb-4">
+            <label for="nome" class="block text-gray-700 font-semibold mb-2">Nome do canteiro*</label>
+            <input type="text" name="nome" id="nome" placeholder="Digite o nome do canteiro" 
+                class="w-full bg-gray-100 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" required>
+        </div>
 
-<h1 class="text-center py-10 text-white">Adicionar Canteiro</h1>
+        <!-- Contadores -->
+        <div class="mb-6">
+            <label for="quantMaxPlant" class="block text-gray-700 font-semibold mb-2">Quantas plantas cabem nele?</label>
+            <div class="flex items-center justify-between bg-gray-100 px-4 py-3 rounded-lg">
+                <button onclick="remover(event)" type="button" class="bg-green-500 text-2xl font-bold">-</button>
+                <input type="number" id="quantMaxPlant" name="quantMaxPlant" value="0" 
+                    class="text-center w-full bg-transparent outline-none text-lg font-semibold" required>
+                <button onclick="adicionar(event)" type="button" class="bg-green-500 text-2xl font-bold">+</button>
+            </div>
+        </div>
 
-<form action="{% url 'add-canteiro' espaco.id %}" method="POST" class="flex flex-col gap-4 px-8" autocomplete="off">
-    {% csrf_token %}
-    
-    <div class="max-w-3xl w-[29vw] mx-auto p-4 font-bold">
-        <label for="nome" class="block text-white">Nome:</label>
-        <input type="text" name="nome" id="nome" placeholder="Digite o nome do canteiro" class="w-full mt-2 p-2 border rounded" required>
-    </div>
+        <!-- Botões -->
+        <div class="flex justify-between">
+            <a href="{% url 'home' %}" class="bg-red-500 hover:bg-red-400 text-white font-bold px-6 py-3 rounded-lg text-center">Voltar</a>
+            <button type="submit" class="bg-green-400 hover:bg-green-300 text-white font-bold px-6 py-3 rounded-lg transition-all">Adicionar</button>
+        </div>
+    </form>
+</div>
 
-    <div class="max-w-3xl w-[29vw] mx-auto p-4 font-bold">
-        <label for="quantMaxPlant" class="block text-white">Quantidade Máxima de Plantas:</label>
-        <input type="number" name="quantMaxPlant" id="quantMaxPlant" placeholder="Digite a quantidade máxima de plantas" class="w-full mt-2 p-2 border rounded" required>
-    </div>
+<script>
+    let input = document.querySelector('input[type="number"][name="quantMaxPlant"]');
 
-    <div class="max-w-3xl mx-auto p-4 hover:animate-bounce">
-        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">
-            Adicionar
-        </button>
-    </div>
-</form>
+    function adicionar(event){
+        event.preventDefault();
+        input.value = Number(input.value) + 1;
+    }
 
-
-
+    function remover(event){
+        event.preventDefault();
+        if (Number(input.value) > 0) {
+            input.value = Number(input.value) - 1;
+        }
+    }
+</script>
 {% endblock %}

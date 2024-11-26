@@ -1,52 +1,68 @@
 {% extends 'layouts/blank.html' %}
+{% load static %}
 
 {% block content %}
 
-<main class="gap-5 mx-auto w-11/12 p-8">
+<main class="gap-2 mx-auto w-11/12 pt-2"> <!-- Reduzido padding top -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="animate-fade-in-down mb-4 p-4 rounded-2xl {% if message.tags == 'success' %}bg-green-100 border border-green-400 text-green-700{% endif %} message-alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
     {% if atividades %}
-    <h2>Próximas Atividades</h2>
-    <ul>
-    {% for atividade in atividades %}
+    <h2 class="mb-2">Próximas Atividades</h2>
+    <ul class="mb-3">
+        {% for atividade in atividades %}
         <li>
             {{ atividade.data|date:"d/m/Y" }} - {{ atividade.atividade }} {{ atividade.planta }}
         </li>
-    {% endfor %}
+        {% endfor %}
     </ul>
     {% else %}
-        <p>Não há próximas atividades.</p>
+    <p class="mb-3">Não há próximas atividades.</p>
     {% endif %}
-    <!-- Botão para adicionar novo espaço -->
-    <a href="{% url 'add-espaco' %}">
-        <div class="block add-block flex flex-col justify-center items-center mx-auto rounded-lg transition-transform duration-300 hover:scale-105 hover:shadow-lg ml-0">
-            <span class="text-white mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus">
-                    <path d="M5 12h14" />
-                    <path d="M12 5v14" />
-                </svg>
-            </span>
-            <h2 class="text-white text-xl font-semibold">Adicionar Novo Espaço</h2>
-        </div>
-    </a>
 
+    <!-- Bot����o para adicionar novo espaço -->
+    <div class="flex justify-center mb-3">
+        <a href="{% url 'add-espaco' %}" class="w-48 bg-green-800/80 hover:bg-green-800 text-white rounded-2xl">
+            <div
+                class="aspect-square bg-gray-200/70 border-2 border-gray-300 flex flex-col justify-center items-center rounded-2xl transition-transform duration-300 hover:scale-105 hover:shadow-lg p-4">
+                <span class="text-black mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-plus">
+                        <path d="M5 12h14" />
+                        <path d="M12 5v14" />
+                    </svg>
+                </span>
+                <h2 class="text-black text-sm font-medium">Adicionar Novo Espaço</h2>
+            </div>
+        </a>
+    </div>
+    <br>
+    <!--Local onde ficará atividades-->
     <br><br>
 
     <!-- Renderizando todos os espaços existentes -->
-    <div>
+    <div class="mt-2"> <!-- Reduzido margin-top -->
         <!-- Grid para organizar os espaços lado a lado -->
         {% for espaco in espacos %}
-        <div class="block bg-[#e2b57f] border-2 border-[#d1995b] flex flex-col justify-between items-start mx-auto rounded-lg transition-transform duration-300 hover:scale-105 hover:shadow-lg p-4">
-
+        <div
+            class="block bg-gray-200/70 border-2 border-gray-300 flex flex-col justify-between items-start mx-auto rounded-2xl transition-transform duration-300 hover:scale-105 hover:shadow-lg p-3 mb-4 max-w-4xl">
             <!-- Cabeçalho com nome do espaço e a seta -->
             <div class="flex justify-between items-start w-full" onclick="toggleEspaco({{ espaco.id }})">
                 <div class="flex flex-col">
                     <h2 class="text-xl font-semibold text-black">{{ espaco.nome }}</h2>
                     <p class="text-gray-600">Tipo de Solo: {{ espaco.tipo_de_solo }}</p>
-                    <p class="text-gray-600">Canteiros: {{ espaco.canteiro_set.count }} / {{ espaco.quantMaxCanteiro }}</p>
+                    <p class="text-gray-600">Canteiros: {{ espaco.canteiro_set.count }} / {{ espaco.quantMaxCanteiro }}
+                    </p>
                 </div>
 
-                <!-- Botão de seta para alternar -->
-                <button class="bg-blue-500 p-2 rounded-lg text-white">
-                    <span id="icon-{{ espaco.id }}">&#9660;</span> <!-- seta para baixo -->
+                <button class="bg-white border border-gray-300 p-1.5 rounded-2xl text-gray-600 hover:bg-gray-50">
+                    <span id="icon-{{ espaco.id }}">&#9660;</span>
                 </button>
             </div>
 
@@ -54,45 +70,68 @@
             <div id="conteudo-espaco-{{ espaco.id }}" class="mt-4 w-full hidden">
 
                 <!-- Botão para adicionar plantas no espaço (fora dos canteiros) -->
-                <a href="javascript:void(0);" onclick="mostrarFrutas({{ espaco.id }})" id="btn-adicionar-planta-{{ espaco.id }}" class="block bg-green-600 text-white text-center py-2 px-4 rounded-lg mb-4">
-                    Adicionar Planta
+                <a href="javascript:void(0);" onclick="mostrarFrutas({{ espaco.id }})"
+                    id="btn-adicionar-planta-{{ espaco.id }}"
+                    class="flex items-center justify-center gap-2 bg-green-800/80 hover:bg-green-800 text-white px-4 py-2 rounded-2xl transition-all duration-300">
+                    <span>Adicionar Planta</span>
                 </a>
 
                 <!-- Galeria de imagens para selecionar a planta -->
                 <div id="frutas-{{ espaco.id }}" class="flex flex-wrap gap-2 w-full hidden mt-4">
                     {% for planta in plantas %}
-                    <button id="planta-{{ planta.id }}" class="flex flex-col items-center bg-white p-2 rounded-lg transition-transform duration-300 hover:scale-105"
-                            onclick="mostrarSelectCanteiro({{ planta.id }}, {{ espaco.id }})">
-                        <img src="{{ planta.imagem }}" alt="{{ planta.nome }}" class="w-24 h-24 object-cover rounded-full mb-2">
+                    <button id="planta-{{ planta.id }}"
+                        class="flex flex-col items-center bg-white p-2 rounded-2xl transition-transform duration-300 hover:scale-105"
+                        onclick="mostrarSelectCanteiro({{ planta.id }}, {{ espaco.id }})">
+                        {% if planta.imagem %}
+                        <img src="{{ planta.imagem.url }}" alt="{{ planta.nome }}"
+                            class="w-24 h-24 object-cover rounded-full mb-2">
+                        {% else %}
+                        <img src="{% static 'img/default-plant.png' %}" alt="Imagem padrão"
+                            class="w-24 h-24 object-cover rounded-full mb-2">
+                        {% endif %}
                         <p class="text-black text-center">{{ planta.nome }}</p> <!-- Nome pode ser opcional -->
                     </button>
                     {% endfor %}
                 </div>
-                
+
                 <!-- Select para escolher o canteiro e campo de quantidade -->
                 <div id="select-canteiro-container-{{ espaco.id }}" class="hidden mt-4 w-full">
                     <label for="select-canteiro">Selecione o Canteiro:</label>
-                    <select id="select-canteiro-{{ espaco.id }}" class="w-full p-2 border rounded">
+                    <select id="select-canteiro-{{ espaco.id }}" class="w-1/3 p-2 border rounded-2xl"
+                        placeholder="Selecione o espaço">
                         {% for canteiro in espaco.canteiro_set.all %}
                         <option value="{{ canteiro.id }}">{{ canteiro.nome }}</option>
                         {% endfor %}
                     </select>
                     <label for="quantidade-planta">Quantidade:</label>
-                    <input type="number" id="quantidade-planta-{{ espaco.id }}" class="w-full p-2 border rounded" min="1" value="1">
-                    <button onclick="escolherCanteiroParaPlanta({{ espaco.id }})" class="mt-2 bg-blue-500 text-white p-2 rounded">Adicionar</button>
+                    <label for="quantidade-planta">Quantidade:</label>
+                    <input type="number" id="quantidade-planta-{{ espaco.id }}" class="w-1/3 p-2 border rounded-2xl"
+                        min="1" placeholder="Quantidade de plantas">
+                    <button onclick="escolherCanteiroParaPlanta({{ espaco.id }})"
+                        class="mt-2 bg-blue-500 text-white p-2 rounded-2xl">Adicionar</button>
                 </div>
 
                 <!-- Canteiros dentro do espaço -->
-                <div id="canteiros-{{ espaco.id }}" class="flex flex-wrap justify-center items-center gap-4 mt-4 w-full">
+                <div id="canteiros-{{ espaco.id }}"
+                    class="flex flex-wrap justify-center items-center gap-3 mt-3 w-full">
                     {% for canteiro in espaco.canteiro_set.all %}
-                    <div class="flex flex-col items-center bg-green-500 text-white px-6 py-4 mb-4 rounded-lg w-full relative">
+                    <div
+                        class="flex flex-col items-center bg-gray-700/80 text-white px-4 py-3 mb-3 rounded-2xl w-full relative">
                         <p class="text-xl font-bold">Canteiro: {{ canteiro.nome }}</p>
 
                         <!-- Mostrar plantas já associadas ao canteiro -->
                         <div id="lista-plantas-{{ canteiro.id }}" class="flex flex-wrap gap-2 mt-2 w-full">
                             {% for canteiro_planta in canteiro.canteiroplanta_set.all %}
-                            <div class="flex flex-col items-center bg-white p-2 rounded-lg transition-transform duration-300 hover:scale-105">
-                                <img src="{{ canteiro_planta.planta.imagem }}" alt="{{ canteiro_planta.planta.nome }}" class="w-24 h-24 object-cover rounded-full mb-2">
+                            <div
+                                class="flex flex-col items-center bg-white p-2 rounded-2xl transition-transform duration-300 hover:scale-105">
+                                {% if canteiro_planta.planta.imagem %}
+                                <img src="{{ canteiro_planta.planta.imagem.url }}"
+                                    alt="{{ canteiro_planta.planta.nome }}"
+                                    class="w-24 h-24 object-cover rounded-full mb-2">
+                                {% else %}
+                                <img src="{% static 'img/default-plant.png' %}" alt="Imagem padrão"
+                                    class="w-24 h-24 object-cover rounded-full mb-2">
+                                {% endif %}
                                 <p class="text-black text-center">{{ canteiro_planta.planta.nome }}</p>
                                 <p class="text-black text-center">Quantidade: {{ canteiro_planta.quantidade }}</p>
                             </div>
@@ -101,25 +140,24 @@
                     </div>
                     {% endfor %}
                 </div>
-                
+
             </div>
             <!-- Botão de adicionar canteiro -->
-            {% if espaco.canteiro_set.count < espaco.quantMaxCanteiro %}
-            <div class="mt-4 text-center py-4 hover:animate-bounce">
+            {% if espaco.canteiro_set.count < espaco.quantMaxCanteiro %} <div class="mt-4 text-center py-4">
                 <a href="{% url 'add-canteiro' espaco.id %}"
-                    class="shadow-lg px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700 transition-transform duration-300 ease-in-out transform hover:scale-105"
+                    class="shadow-sm px-3 py-1.5 bg-green-800/80 hover:bg-green-800 text-white rounded-2xl border border-gray-300 hover:bg-gray-50 transition-transform duration-300 ease-in-out transform hover:scale-105"
                     data-espaco-id="{{ espaco.id }}">
                     Adicionar Canteiro
                 </a>
-            </div>
-            {% else %}
-            <div class="mt-4">
-                <span class="text-red-500">Limite de canteiros atingido</span>
-            </div>
-            {% endif %}
         </div>
-        <br>
-        {% endfor %}
+        {% else %}
+        <div class="mt-4">
+            <span class="text-red-500">Limite de canteiros atingido</span>
+        </div>
+        {% endif %}
+    </div>
+    <br>
+    {% endfor %}
     </div>
 
 </main>
@@ -204,33 +242,21 @@
         })
         .then(response => {
             if (!response.ok) {
-                // Se o status não for "ok" (exemplo: erro 500 ou 404), lança um erro
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            return response.json();  // Tenta processar o JSON
+            return response.json();
         })
         .then(data => {
             if (data.success) {
-                console.log('Planta adicionada com sucesso!');
-
-                // Adiciona a planta ao canteiro a quantidade de vezes especificada
-                const listaPlantas = document.getElementById(`lista-plantas-${canteiroId}`);
-                for (let i = 0; i < quantidade; i++) {
-                    const plantaDiv = document.createElement('div');
-                    plantaDiv.classList.add('flex', 'flex-col', 'items-center', 'bg-white', 'p-2', 'rounded-lg', 'transition-transform', 'duration-300', 'hover:scale-105');
-                    plantaDiv.innerHTML = `
-                        <img src="${data.planta_imagem}" alt="${data.planta_nome}" class="w-24 h-24 object-cover rounded-full mb-2">
-                        <p class="text-black text-center">${data.planta_nome}</p>
-                    `;
-                    listaPlantas.appendChild(plantaDiv);
-                }
-
-                // Oculta o select e as frutas após adicionar a planta
+                // Oculta elementos antes do refresh
                 const selectContainer = document.getElementById(`select-canteiro-container-${espacoId}`);
                 selectContainer.classList.add('hidden');
 
                 const frutas = document.getElementById(`frutas-${espacoId}`);
                 frutas.classList.add('hidden');
+
+                // Recarrega a página para mostrar a mensagem de sucesso
+                window.location.reload();
             } else {
                 console.log('Erro ao adicionar planta');
                 alert('Erro ao adicionar planta: ' + data.error);
@@ -246,10 +272,10 @@
     function toggleEspaco(espacoId) {
         const content = document.getElementById(`conteudo-espaco-${espacoId}`);
         const icon = document.getElementById(`icon-${espacoId}`);
-        
+
         // Alterna a classe hidden para mostrar ou ocultar o conteúdo
         content.classList.toggle('hidden');
-        
+
         // Alterna o ícone da seta
         if (content.classList.contains('hidden')) {
             icon.innerHTML = '&#9660;'; // seta para baixo
@@ -258,7 +284,23 @@
         }
     }
 
+    // Função para remover mensagens após 3 segundos
+    document.addEventListener('DOMContentLoaded', function() {
+        const messages = document.querySelectorAll('.message-alert');
+        
+        messages.forEach(function(message) {
+            // Adiciona classe para fade out após 2.5 segundos
+            setTimeout(() => {
+                message.style.transition = 'opacity 0.5s ease-in-out';
+                message.style.opacity = '0';
+            }, 2500);
 
+            // Remove o elemento após 3 segundos
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        });
+    });
 
 </script>
 {% endblock %}

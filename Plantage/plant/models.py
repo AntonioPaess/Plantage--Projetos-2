@@ -16,7 +16,7 @@ class Planta(models.Model):
     necessidade_de_nutrientes = models.TextField()
     ciclo_de_podagem = models.IntegerField()
     ciclo_de_colheita = models.IntegerField()
-    imagem = models.URLField()
+    imagem = models.ImageField(upload_to='plantas/')
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     
     # Novo campo para plantas inimigas

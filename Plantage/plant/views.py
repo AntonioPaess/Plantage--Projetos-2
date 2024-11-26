@@ -40,7 +40,7 @@ class AddPlanta(View):
         nutri = request.POST.get("necessidade_de_nutrientes")
         poda = request.POST.get("ciclo_de_podagem")
         colhe = request.POST.get("ciclo_de_colheita")
-        urlImagem = request.POST.get("imagem")
+        imagem = request.FILES.get("imagem")  # Mudança aqui - usando FILES ao invés de POST
         plantas_inimigas_ids = request.POST.getlist("plantas_inimigas")
 
         try:
@@ -59,7 +59,7 @@ class AddPlanta(View):
             necessidade_de_nutrientes=nutri,
             ciclo_de_podagem=poda,
             ciclo_de_colheita=colhe,
-            imagem=urlImagem,
+            imagem=imagem,  # Usando o arquivo de imagem
             user=user_profile
         )
         planta.save()
@@ -95,6 +95,7 @@ class AddEspaco(View):
             user=user_profile
         )
         area.save()
+        messages.success(request, f'Espaço "{name}" foi adicionado com sucesso!')
         return redirect('home')
 
 @method_decorator(login_required, name='dispatch')
@@ -132,7 +133,7 @@ class AddCanteiro(View):
         try:
             canteiro = Canteiro(nome=nome, user=user_profile, espaco=espaco, quantMaxPlant=quantPlantMax)
             canteiro.save()
-            messages.success(request, 'Canteiro adicionado com sucesso.')
+            messages.success(request, f'Canteiro "{nome}" foi adicionado com sucesso!')
             return redirect('home')
         except Exception as e:
             messages.error(request, f'Erro ao adicionar canteiro: {str(e)}')
@@ -142,16 +143,14 @@ class ListAllView(View):
     def get(self, request):
         user_profile = Profile.objects.get(user=request.user)
         plantas = Planta.objects.filter(user=user_profile)
-        ctx = {'allPlantas': plantas}
+        ctx = {'allPlantas': plantas}  # O ImageField já será acessível diretamente
         return render(request, 'visualizarTodas.html', ctx)
 
 class PlantaDetail(View):
     def get(self, request, id):
-        ctx = {'planta': Planta.objects.filter(id=id).first()}
+        ctx = {'planta': Planta.objects.filter(id=id).first()}  # O ImageField já será acessível diretamente
         return render(request, 'visualizarPlanta.html', ctx)
 
-def testeview(request):
-    return render(request, 'teste.html')
 
 @login_required
 def adicionar_planta_canteiro(request):
@@ -194,11 +193,12 @@ def adicionar_planta_canteiro(request):
             canteiro_planta.quantidade = quantidade
 
         canteiro_planta.save()
-
+        messages.success(request, 'Planta adicionada com sucesso!')
+        
         return JsonResponse({
             'success': True,
             'planta_nome': planta.nome,
-            'planta_imagem': planta.imagem,
+            'planta_imagem': planta.imagem.url if planta.imagem else '',  # Usar .url para obter o caminho da imagem
             'quantidade': canteiro_planta.quantidade
         })
 
@@ -285,7 +285,7 @@ def AtividadeDiaria(user_profile):
             atividades.append({
                 'planta': cp.planta.nome,
                 'planta_imagem': planta_imagem,
-                'atividade': 'Podar',
+                'atividade': 'Manejar',
                 'data': proxima_data_podagem,  # Mantém o objeto date para ordenação
                 'data_formatada': proxima_data_podagem.strftime('%d/%m/%Y')  # Data formatada para exibição
             })

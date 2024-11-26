@@ -1,110 +1,221 @@
-{% extends 'layouts/blank.html' %}
-{% load custom_filters %}
-{% block content %}
-<div class="flex flex-col items-center justify-center min-h-screen">
-    <div class="bg-white p-8 rounded-xl shadow-lg w-11/12 max-w-6xl">
-        <!-- Cabeçalho com Navegação -->
-        <div class="flex justify-between items-center mb-6">
-            <a href="?mes={{ mes_anterior }}&ano={{ ano_anterior }}" 
-               class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
-                <span class="flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                    </svg>
-                    Mês Anterior
-                </span>
-            </a>
-            
-            <h1 class="text-center text-4xl font-bold text-green-700">{{ nome_mes }} {{ yy }}</h1>
-            
-            <a href="?mes={{ proximo_mes }}&ano={{ proximo_ano }}" 
-               class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
-                <span class="flex items-center">
-                    Próximo Mês
-                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </span>
-            </a>
-        </div>
+{% load static %}
+{% load custom_filters %}  <!-- Adicionar esta linha no topo do arquivo -->
+<!DOCTYPE html>
+<html lang="en">
 
-        <!-- Calendário -->
-        <div class="overflow-x-auto w-full">
-            <table id="calendario" class="w-full border-collapse bg-white rounded-lg overflow-hidden">
-                <thead>
-                    <tr class="bg-green-600 text-white">
-                        <th class="p-3 text-center">Dom</th>
-                        <th class="p-3 text-center">Seg</th>
-                        <th class="p-3 text-center">Ter</th>
-                        <th class="p-3 text-center">Qua</th>
-                        <th class="p-3 text-center">Qui</th>
-                        <th class="p-3 text-center">Sex</th>
-                        <th class="p-3 text-center">Sáb</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for semana in calendario %}
-                    <tr>
-                        {% for dia in semana %}
-                        {% if dia == 0 %}
-                        <td class="border border-gray-200 p-2 h-32 w-32 bg-gray-50"></td>
-                        {% else %}
-                        <td class="border border-gray-200 p-2 h-32 w-32 hover:bg-gray-50 transition-colors relative" data-dia="{{ dia }}">
-                            <div class="flex flex-col h-full">
-                                <span class="text-right text-gray-500 mb-1">{{ dia }}</span>
-                                <div class="atividades flex flex-wrap gap-1 justify-center flex-grow">
-                                    {% if atividades_por_dia|get_item:dia %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plantage</title>
+    <link rel="icon" type="image/png" href="{% static 'plantage.png' %}">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://unpkg.com/htmx.org/dist/htmx.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style type="text/tailwindcss">
+        [x-cloak] { 
+            display: none !important; 
+        }
+        h1 {
+            @apply text-4xl font-bold mb-4
+        }
+        h2 {
+            @apply text-xl font-bold mb-2
+        }
+        p {
+            @apply mb-4
+        }
+        .button, button, [type='submit'], [type='button'] {
+            @apply bg-indigo-600 text-white font-bold px-6 py-4 inline-block 
+            rounded-lg shadow-lg transition-all cursor-pointer
+        }
+        .button:hover, button:hover, [type='submit']:hover, [type='button']:hover {
+            @apply bg-indigo-700
+        }
+        .button:active, button:active, [type='submit']:active, [type='button']:active {
+            @apply scale-95
+        }
+        .button.alert, button.alert {
+            @apply bg-red-700
+        }
+        .button.alert:hover, button.alert:hover {
+            @apply bg-red-600
+        }
+        .button-red {
+            @apply !bg-red-500 hover:!bg-red-600
+        }
+        .button-gray {
+            @apply !bg-gray-300 hover:!bg-[#c3c9d0]
+        }
+        .navitems>li>a {
+            @apply flex items-center gap-2 h-12 px-4 hover:bg-gray-700 rounded-lg;
+        }
+        .hoverlist>* {
+            @apply hover:bg-gray-100 rounded-md transition duration-150;
+        }
+        .hoverlist>*>a {
+            @apply flex items-center p-2;
+        }
+        .highlight {
+            @apply !bg-indigo-100;
+        }
+        .allauth content a {
+            @apply underline underline-offset-2
+        }
+        .allauth content a:hover {
+            @apply text-indigo-500
+        }
+        .allauth form[action="/accounts/signup/"] ul {
+            @apply hidden
+        }
+        .allauth form[action="/accounts/signup/"] ul.errorlist {
+            @apply block
+        }
+        .allauth .helptext {
+            @apply block mt-4
+        }
+        label {
+            @apply hidden
+        }
+        input[type=file] {
+            @apply bg-white pl-0
+        }
+        .textarea, textarea, input {
+            @apply w-full rounded-lg py-4 px-5 bg-gray-100
+        }
+        .errorlist li {
+            @apply p-1 pl-4 border-l-red-500 border-l-4 border-solid mb-2 text-red-500
+        }
+        label[for="id_remember"] {
+            @apply inline-block w-auto mr-2
+        }
+        input[name="remember"] {
+            @apply w-auto
+
+        }
+        .alert-info { @apply bg-blue-300 }
+        .alert-success { @apply bg-green-400 }
+        .alert-warning { @apply bg-amber-400 }
+        .alert-danger { @apply bg-amber-500 }
+    </style>
+</head>
+
+<body class="min-h-screen bg-cover bg-center" style="background-image: url('{% static 'background.PNG' %}');">
+    {% include 'includes/header.html' %}
+    <div class="flex flex-col items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-xl shadow-lg w-11/12 max-w-6xl">
+            <!-- Cabeçalho com Navegação -->
+            <div class="flex justify-between items-center mb-6">
+                <a href="?mes={{ mes_anterior }}&ano={{ ano_anterior }}"
+                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    <span class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Mês Anterior
+                    </span>
+                </a>
+
+                <h1 class="text-center text-4xl font-bold text-green-700">{{ nome_mes }} {{ yy }}</h1>
+
+                <a href="?mes={{ proximo_mes }}&ano={{ proximo_ano }}"
+                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    <span class="flex items-center">
+                        Próximo Mês
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Calendário -->
+            <div class="overflow-x-auto w-full">
+                <table id="calendario" class="w-full border-collapse bg-white rounded-lg overflow-hidden">
+                    <thead>
+                        <tr class="bg-green-600 text-white">
+                            <th class="p-3 text-center">Domingo</th>
+                            <th class="p-3 text-center">Segunda</th>
+                            <th class="p-3 text-center">Terça</th>
+                            <th class="p-3 text-center">Quarta</th>
+                            <th class="p-3 text-center">Quinta</th>
+                            <th class="p-3 text-center">Sexta</th>
+                            <th class="p-3 text-center">Sábado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for semana in calendario %}
+                        <tr>
+                            {% for dia in semana %}
+                            {% if dia == 0 %}
+                            <td class="border border-gray-200 p-2 h-32 w-32 bg-gray-50"></td>
+                            {% else %}
+                            <td class="border border-gray-200 p-2 h-32 w-32 hover:bg-gray-50 transition-colors relative"
+                                data-dia="{{ dia }}">
+                                <div class="flex flex-col h-full">
+                                    <span class="text-right text-gray-500 mb-1">{{ dia }}</span>
+                                    <div class="atividades flex flex-wrap gap-1 justify-center flex-grow">
+                                        {% if atividades_por_dia|get_item:dia %}
                                         {% for atividade in atividades_por_dia|get_item:dia %}
                                         <div class="relative group">
-                                            <div class="w-8 h-8 rounded-full p-1 cursor-pointer transition-transform hover:scale-110 
-                                                      {% if atividade.atividade == 'Podar' %}bg-green-500{% else %}bg-yellow-500{% endif %}">
-                                                <img src="{{ atividade.planta_imagem }}" 
-                                                     alt="{{ atividade.planta }}"
-                                                     class="w-full h-full rounded-full object-cover">
+                                            <div
+                                                class="w-8 h-8 rounded-full p-1 cursor-pointer transition-transform hover:scale-110 
+                                                      {% if atividade.atividade == 'Manejar' %}bg-green-500{% else %}bg-yellow-500{% endif %}">
+                                                <img src="{{ atividade.planta_imagem }}" alt="{{ atividade.planta }}"
+                                                    class="w-full h-full rounded-full object-cover">
                                             </div>
                                             <!-- Tooltip Melhorado -->
-                                            <div class="absolute hidden group-hover:block bg-black text-white text-xs rounded-lg p-2 z-10 
+                                            <div
+                                                class="absolute hidden group-hover:block bg-black text-white text-xs rounded-lg p-2 z-10 
                                                         -mt-1 transform -translate-x-1/2 left-1/2 whitespace-nowrap shadow-lg">
                                                 <strong>{{ atividade.planta }}</strong><br>
                                                 {{ atividade.atividade }} - {{ atividade.data_formatada }}
                                             </div>
                                         </div>
                                         {% endfor %}
-                                    {% endif %}
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        {% endif %}
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
                         {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Legenda Melhorada -->
-        <div class="mt-6 flex justify-center gap-6">
-            <div class="flex items-center bg-white px-4 py-2 rounded-lg shadow">
-                <div class="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
-                <span class="text-sm font-medium">Podar</span>
+                    </tbody>
+                </table>
             </div>
-            <div class="flex items-center bg-white px-4 py-2 rounded-lg shadow">
-                <div class="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
-                <span class="text-sm font-medium">Colher</span>
+
+            <!-- Legenda Melhorada -->
+            <div class="mt-6 flex justify-center gap-6">
+                <div class="flex items-center bg-white px-4 py-2 rounded-lg shadow">
+                    <div class="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+                    <span class="text-sm font-medium">Manejar</span>
+                </div>
+                <div class="flex items-center bg-white px-4 py-2 rounded-lg shadow">
+                    <div class="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
+                    <span class="text-sm font-medium">Colher</span>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<style>
-    /* Animações suaves */
-    .group:hover .group-hover\:block {
-        animation: fadeIn 0.2s ease-in-out;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-10px) translateX(-50%); }
-        to { opacity: 1; transform: translateY(0) translateX(-50%); }
-    }
-</style>
-{% endblock %}
+    <style>
+        /* Animações suaves */
+        .group:hover .group-hover\:block {
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) translateX(-50%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) translateX(-50%);
+            }
+        }
+    </style>
+</body>

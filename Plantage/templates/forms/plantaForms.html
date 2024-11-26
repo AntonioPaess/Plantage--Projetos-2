@@ -1,159 +1,89 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plantage</title>
-    <link rel="icon" type="image/png" href="{% static 'plantage.png' %}">
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="https://unpkg.com/htmx.org/dist/htmx.js" defer></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
-    <style type="text/tailwindcss">
-        [x-cloak] { 
-            display: none !important; 
-        }
-        h1 {
-            @apply text-4xl font-bold mb-4
-        }
-        h2 {
-            @apply text-xl font-bold mb-2
-        }
-        p {
-            @apply mb-4
-        }
-        .button, button, [type='submit'], [type='button'] {
-            @apply bg-indigo-600 text-white font-bold px-6 py-4 inline-block 
-            rounded-lg shadow-lg transition-all cursor-pointer
-        }
-        .button:hover, button:hover, [type='submit']:hover, [type='button']:hover {
-            @apply bg-indigo-700
-        }
-        .button:active, button:active, [type='submit']:active, [type='button']:active {
-            @apply scale-95
-        }
-        .button.alert, button.alert {
-            @apply bg-red-700
-        }
-        .button.alert:hover, button.alert:hover {
-            @apply bg-red-600
-        }
-        .button-red {
-            @apply !bg-red-500 hover:!bg-red-600
-        }
-        .button-gray {
-            @apply !bg-gray-300 hover:!bg-[#c3c9d0]
-        }
-        .navitems>li>a {
-            @apply flex items-center gap-2 h-12 px-4 hover:bg-gray-700 rounded-lg;
-        }
-        .hoverlist>* {
-            @apply hover:bg-gray-100 rounded-md transition duration-150;
-        }
-        .hoverlist>*>a {
-            @apply flex items-center p-2;
-        }
-        .highlight {
-            @apply !bg-indigo-100;
-        }
-        .allauth content a {
-            @apply underline underline-offset-2
-        }
-        .allauth content a:hover {
-            @apply text-indigo-500
-        }
-        .allauth form[action="/accounts/signup/"] ul {
-            @apply hidden
-        }
-        .allauth form[action="/accounts/signup/"] ul.errorlist {
-            @apply block
-        }
-        .allauth .helptext {
-            @apply block mt-4
-        }
-        label {
-            @apply hidden
-        }
-        input[type=file] {
-            @apply bg-white pl-0
-        }
-        .textarea, textarea, input {
-            @apply w-full rounded-lg py-4 px-5 bg-gray-100
-        }
-        .errorlist li {
-            @apply p-1 pl-4 border-l-red-500 border-l-4 border-solid mb-2 text-red-500
-        }
-        label[for="id_remember"] {
-            @apply inline-block w-auto mr-2
-        }
-        input[name="remember"] {
-            @apply w-auto
+{% extends 'layouts/blank.html' %}
 
-        }
-        .alert-info { @apply bg-blue-300 }
-        .alert-success { @apply bg-green-400 }
-        .alert-warning { @apply bg-amber-400 }
-        .alert-danger { @apply bg-amber-500 }
-    </style>
-</head>
+{% block content %}
 
-<body class="min-h-screen bg-gradient-to-b from-green-800 to-green-600">
-    
-    {% include 'includes/header.html' %}
-
-    <form action="{% url 'add' %}" method="POST" class="flex gap-2 px-8 py-24" autocomplete="off">
-        {% csrf_token %}
-        
-        <div class="ml-32 mb-16 bg-white rounded-2xl md:drop-shadow-2xl shadow-black w-full p-8 max-w-3xl mx-auto p--20 font-bold">
+    <div class="min-h-screen flex items-center justify-center bg-cover bg-center">
+        <form action="{% url 'add' %}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl md:drop-shadow-2xl shadow-black w-full p-8 max-w-3xl mx-auto font-bold" autocomplete="off">
+            {% csrf_token %}
             
+            <!-- Nome -->
             <h2 class="text-black" for="nome">Nome:</h2>
             <div>
-                <input type="text" name="nome" id="nome" placeholder="Digite o nome da planta" required>
-                <br><br>
-
+                <input type="text" name="nome" id="nome" placeholder="Digite o nome da planta" required class="w-full p-2 border rounded-lg mb-4">
+                
+                <!-- Dias para o Manejo -->
                 <h2 class="text-black" for="ciclo_de_podagem">Dias para o Manejo da planta:</h2>
-                <input type="number" id="ciclo_de_podagem" name="ciclo_de_podagem" placeholder="Digite o numero aqui" step="1" required>
-                <br><br>
+                <input type="number" id="ciclo_de_podagem" name="ciclo_de_podagem" placeholder="Digite o numero aqui" step="1" required class="w-full p-2 border rounded-lg mb-4">
 
+                <!-- Dias para a Colheita -->
                 <h2 class="text-black" for="ciclo_de_colheita">Dias para a colheita:</h2>
-                <input type="number" id="ciclo_de_colheita" name="ciclo_de_colheita" placeholder="Digite o numero aqui" step="1" required>
-                <br><br>
+                <input type="number" id="ciclo_de_colheita" name="ciclo_de_colheita" placeholder="Digite o numero aqui" step="1" required class="w-full p-2 border rounded-lg mb-4">
 
+                <!-- Imagem -->
                 <div class="inputdiv text-black">
-                    <h2 class="text-black" for="imagem">URL da Imagem:</h2>
-                    <input type="url" name="imagem" id="imagem" placeholder="Digite a URL da imagem" required>
+                    <h2 class="text-black" for="imagem">Imagem da Planta:</h2>
+                    <input type="file" name="imagem" id="imagem" accept="image/*" required class="w-full p-2 border rounded-lg mb-4">
                 </div>
-                <br>
 
-                <h2 class="text-white" for="necessidade_de_nutrientes">Necessidade de Nutrientes:</h2>
-                <select name="necessidade_de_nutrientes" id="necessidade_de_nutrientes" required>
-                    <option value="">Selecione a necessidade de Nutrientes da Planta</option>
-                    <option value="Baixa">Baixa</option>
-                    <option value="Media">Média</option>
-                    <option value="Alta">Alta</option>
-                </select>
-                <br><br>
+                <!-- Necessidade de Nutrientes -->
+                <h2 class="text-black">Necessidade de Nutrientes:</h2>
+                <div id="necessidade_de_nutrientes" class="bg-white border rounded-lg p-4 flex gap-4 mb-4">
+                    <div class="option text-black bg-gray-100 p-4 rounded-lg cursor-pointer hover:bg-gray-200" data-value="Baixa">Baixa</div>
+                    <div class="option text-black bg-gray-100 p-4 rounded-lg cursor-pointer hover:bg-gray-200" data-value="Media">Média</div>
+                    <div class="option text-black bg-gray-100 p-4 rounded-lg cursor-pointer hover:bg-gray-200" data-value="Alta">Alta</div>
+                </div>
+                <input type="hidden" name="necessidade_de_nutrientes" id="necessidade_de_nutrientes_input" required>
 
-                <!-- Adiciona a seleção de plantas inimigas -->
-                <h2 class="text-white" for="plantas_inimigas">Selecione as Plantas Inimigas:</h2>
-                <select name="plantas_inimigas" id="plantas_inimigas" multiple class="textarea">
+                <!-- Plantas Inimigas -->
+                <h2 class="text-black mb-4">Selecione as Plantas Inimigas:</h2>
+                <div class="mb-4">
+                    <label class="flex items-center space-x-2 bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-200">
+                        <input type="checkbox" id="no_enemies" class="form-checkbox h-5 w-5 text-indigo-600">
+                        <span class="text-black">Não existe plantas inimigas</span>
+                    </label>
+                </div>
+
+                <!-- Lista de plantas inimigas -->
+                <div class="grid grid-cols-2 gap-4" id="enemy_plants_list">
                     {% for planta in plantas %}
-                        <option value="{{ planta.id }}">{{ planta.nome }}</option>
+                        <label class="flex items-center space-x-2 bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-200">
+                            <input type="checkbox" name="plantas_inimigas" value="{{ planta.id }}" class="form-checkbox h-5 w-5 text-indigo-600 enemy-checkbox">
+                            <span class="text-black">{{ planta.nome }}</span>
+                        </label>
                     {% endfor %}
-                </select>
+                </div>
             </div>
-            <br><br>
+            <br>
 
+            <!-- Botão de envio -->
             <div class="text-center">
-                <button type="submit" class="btn btn-primary">Enviar</button>
+                <button type="submit" class="btn btn-primary px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Enviar</button>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 
-</body>
+    <script>
+        // Captura a checkbox de "não existe plantas inimigas"
+        const noEnemiesCheckbox = document.getElementById('no_enemies');
+        const enemyCheckboxes = document.querySelectorAll('.enemy-checkbox');
 
+        // Função para habilitar/desabilitar checkboxes de inimigos
+        noEnemiesCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                // Desmarca e desabilita todas as outras checkboxes
+                enemyCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    checkbox.disabled = true;
+                });
+            } else {
+                // Habilita todas as outras checkboxes
+                enemyCheckboxes.forEach(checkbox => {
+                    checkbox.disabled = false;
+                });
+            }
+        });
+    </script>
 
+{% endblock %}
 
 

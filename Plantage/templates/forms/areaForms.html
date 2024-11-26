@@ -1,50 +1,60 @@
 {% extends 'layouts/blank.html' %}
+
 {% block content %}
+<div class="min-h-screen flex items-center justify-center bg-cover bg-center">
+    <form action="{% url 'add-espaco' %}" method="POST" class="bg-white rounded-3xl p-8 shadow-lg w-full max-w-md" autocomplete="off">
+        {% csrf_token %}
+        
+        <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">Adicionar espaço</h1>
 
-<h1 class="text-center py-10 text-white">Adicionar Espaco</h1>
+        <!-- Nome do Espaço -->
+        <div class="mb-4">
+            <label for="nome" class="block text-gray-700 font-semibold mb-2">Nome do espaço*</label>
+            <input type="text" name="nome" id="nome" placeholder="Digite o nome do espaço" 
+                class="w-full bg-gray-100 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" required>
+        </div>
 
+        <!-- Contadores -->
+        <div class="mb-6">
+            <label for="quantMaxCanteiro" class="block text-gray-700 font-semibold mb-2">Quantos canteiros cabem nele?</label>
+            <div class="flex items-center justify-between bg-gray-100 px-4 py-3 rounded-lg">
+                <button onclick="remover()" type="button" class="bg-green-500 text-2xl font-bold" >-</button>
+                <input type="number" id="quantMaxCanteiro" name="quantMaxCanteiro" value="0" 
+                    class="text-center w-full bg-transparent outline-none text-lg font-semibold" required>
+                <button onclick="adicionar()" type="button" class="bg-green-500 text-2xl font-bold" >+</button>
+            </div>
+        </div>
 
-
-<form action="{% url 'add-espaco' %}" method="POST" class="flex gap-2 px-8 py--24" autocomplete="off">
-    {% csrf_token %}
-
-    <div class="max-w-3xl mx-auto p--20 font-bold">
-
-
-        <h2 class="text-white" for="nome">Nome:</h2>
-        <div class="">
-            <input type="text" name="nome" id="nome" placeholder="Digite o nome do espaço de plantio" required>
-            <br>
-            <br>
-            <h2 class="text-white" for="quantMaxCanteiro">Quantos canteiros cabem no espaço:</h2>
-
-            <input type="number" id="quantMaxCanteiro" name="quantMaxCanteiro" placeholder="Digite o numero aqui"
-                step="1" required>
-            <br>
-            <br>
-
-            <h2 class="text-white" for="nome">Tipo de Solo:</h2>
-            <select name="tipo_de_solo" id="tipo_de_solo" required>
-                <option value="">Selecione o tipo de solo da sua área de plantio</option>
+        <!-- Tipo de Solo -->
+        <div class="mb-4">
+            <label for="tipo_de_solo" class="block text-gray-700 font-semibold mb-2">Selecione o tipo de solo</label>
+            <select name="tipo_de_solo" id="tipo_de_solo" 
+                class="w-full bg-gray-100 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" required>
+                <option value="">Selecione o tipo de solo</option>
                 <option value="Solo Arenoso">Solo Arenoso</option>
                 <option value="Solo Argiloso">Solo Argiloso</option>
                 <option value="Solo Silte">Solo Silte</option>
                 <option value="Solo Humífero">Solo Humífero</option>
             </select>
+        </div>
+
+        <!-- Botões -->
+        <div class="flex justify-between">
+            <a href="{% url 'home' %}" class="bg-red-500 hover:bg-red-400 text-white font-bold px-6 py-3 rounded-lg text-center">Voltar</a>
+            <button type="submit" class="bg-green-400 hover:bg-green-300 text-white font-bold px-6 py-3 rounded-lg transition-all">Adicionar</button>
 
         </div>
-        <br>
-        <br>
-        <div class=" text-center">
-            <button type="submit" class="btn btn-primary">Enviar</button>
-        </div>
-    </div>
+    </form>
+    
+</div>
 
-</form>
-
-
-
-
-
-
+<script>
+    let input = document.querySelector('input[type="number"][name="quantMaxCanteiro"]');
+    function adicionar(){
+        input.value = Number(input.value) + 1;
+    };
+    function remover(){
+        input.value = Number(input.value) - 1;
+    };
+</script>
 {% endblock %}

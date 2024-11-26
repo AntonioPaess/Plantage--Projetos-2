@@ -1,13 +1,12 @@
-
-
-
 {% extends 'layouts/blank.html' %}
+{% load static %}
+
 {% block content %}
 
-<main class="flex flex-col items-center justify-center max-h-[90vh] rounded-lg p-8 relative">
+<main class="flex flex-col items-center justify-center min-h-screen p-4">
     <span id="back" class="absolute top-8 left-8">
         <a href="{% url 'list-all' %}" class="text-[#17285E]">
-            <svg class="text-white" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-arrow-left">
+            <svg class="text-white" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"/>
                 <path d="M16 12H8"/>
                 <path d="m12 8-4 4 4 4"/>
@@ -15,17 +14,23 @@
         </a>
     </span>
     
-    <div id="card" class=" flex flex-col items-center p-8 bg-white rounded-lg border-2 border-gray-300 shadow-lg">
-        <div id="title" class="mb-6">
-            <h1 class="text-black text-3xl font-bold">{{planta.nome}}</h1>
+    <div id="card" class="flex flex-col items-center p-6 bg-white rounded-2xl border-2 border-gray-300 shadow-lg max-w-2xl w-full">
+        <div id="title" class="mb-4">
+            <h1 class="text-black text-2xl font-bold">{{planta.nome}}</h1>
         </div>
-        <img id="image" src="{{planta.imagem}}" alt="Imagem de {{planta.nome}}" class="w-72 h-auto rounded-lg drop-shadow-lg transition-transform duration-300 transform hover:scale-105 mb-4">
+        <div class="planta-detail">
+            {% if planta.imagem %}
+                <img src="{{ planta.imagem.url }}" alt="{{ planta.nome }}" class="w-64 h-64 object-cover rounded-2xl">
+            {% else %}
+                <img src="{% static 'img/default-plant.png' %}" alt="Imagem padrão" class="w-64 h-64 object-cover rounded-2xl">
+            {% endif %}
+        </div>
     
-        <div id="stats" class="flex flex-col items-center  p-8 w-full">
-            <div id="text" class="flex flex-col items-center">
-                <div id="hp" class="text-2xl justify-center flex gap-5 mb-2">
-                    <span class=" stats-title font-bold">Tempo de Manejo:</span>
-                    <span class="stats-data text-black font-bold">{{planta.ciclo_de_podagem}} dias</span>
+        <div id="stats" class="flex flex-col items-center p-4 w-full max-w-md">
+            <div id="text" class="flex flex-col items-center gap-2">
+                <div id="hp" class="text-lg justify-center flex gap-3 mb-2">
+                    <span class="stats-title font-bold">Tempo de Manejo:</span>
+                    <span class="stats-data text-black">{{planta.ciclo_de_podagem}} dias</span>
                 </div>
                 <div id="medidas" class="w-full">
                     <div id="altura" class="text-2xl font-bold justify-center flex gap-5 mb-2">
@@ -41,7 +46,4 @@
         </div>
     </div>
 </main>
-
 {% endblock %}
-
-
