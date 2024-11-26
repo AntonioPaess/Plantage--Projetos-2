@@ -175,14 +175,19 @@ def adicionar_planta_canteiro(request):
             }, status=400)
 
         # Verificação de plantas inimigas já presentes no canteiro
-        plantas_existentes = CanteiroPlanta.objects.filter(canteiro=canteiro).values_list('planta', flat=True)
-        plantas_inimigas = planta.plantas_inimigas.values_list('id', flat=True)
-        
-        # Interseção para verificar se alguma planta inimiga já está no canteiro
-        if set(plantas_existentes) & set(plantas_inimigas):
+        plantas_existentes = CanteiroPlanta.objects.filter(canteiro=canteiro)
+        plantas_inimigas = planta.plantas_inimigas.all()
+
+        # Verifica se alguma planta inimiga já está no canteiro
+        plantas_conflitantes = []
+        for planta_existente in plantas_existentes:
+            if planta_existente.planta in plantas_inimigas:
+                plantas_conflitantes.append(planta_existente.planta.nome)
+
+        if plantas_conflitantes:
             return JsonResponse({
                 'success': False,
-                'error': 'Esta planta possui plantas inimigas no mesmo canteiro.'
+                'error': f'Não é possível adicionar esta planta pois ela é incompatível com: {", ".join(plantas_conflitantes)}'
             }, status=400)
 
         # Adiciona ou atualiza a quantidade de plantas no canteiro
@@ -207,6 +212,22 @@ def adicionar_planta_canteiro(request):
 
 @login_required
 def calendario(request):
+    # Dicionário de tradução dos meses
+    meses_ptbr = {
+        1: 'Janeiro',
+        2: 'Fevereiro',
+        3: 'Março',
+        4: 'Abril',
+        5: 'Maio',
+        6: 'Junho',
+        7: 'Julho',
+        8: 'Agosto',
+        9: 'Setembro',
+        10: 'Outubro',
+        11: 'Novembro',
+        12: 'Dezembro'
+    }
+
     user_profile = Profile.objects.get(user=request.user)
     plantas = Planta.objects.filter(user=user_profile)
 
@@ -231,12 +252,12 @@ def calendario(request):
 
     calendar.setfirstweekday(calendar.SUNDAY)
     calendario_mes = calendar.monthcalendar(yy, mm)
-    nome_mes = calendar.month_name[mm]
+    # Substituir calendar.month_name[mm] pelo nome em português
+    nome_mes = meses_ptbr[mm]
 
-    # Obter as atividades
+    # Rest of your code remains the same...
     atividades = AtividadeDiaria(user_profile)
 
-    # Criar um dicionário para mapear dias às atividades
     atividades_por_dia = {}
     for atividade in atividades:
         data_atividade = atividade['data']
@@ -287,7 +308,9 @@ def AtividadeDiaria(user_profile):
                 'planta_imagem': planta_imagem,
                 'atividade': 'Manejar',
                 'data': proxima_data_podagem,  # Mantém o objeto date para ordenação
-                'data_formatada': proxima_data_podagem.strftime('%d/%m/%Y')  # Data formatada para exibição
+                'data_formatada': proxima_data_podagem.strftime('%d/%m/%Y'),  # Data formatada para exibição
+                'espaco': cp.canteiro.espaco.nome,  # Adicionado
+                'canteiro': cp.canteiro.nome  # Adicionado
             })
 
         # Calcula próxima colheita
@@ -301,7 +324,9 @@ def AtividadeDiaria(user_profile):
                 'planta_imagem': planta_imagem,
                 'atividade': 'Colher',
                 'data': proxima_data_colheita,  # Mantém o objeto date para ordenação
-                'data_formatada': proxima_data_colheita.strftime('%d/%m/%Y')  # Data formatada para exibição
+                'data_formatada': proxima_data_colheita.strftime('%d/%m/%Y'),  # Data formatada para exibição
+                'espaco': cp.canteiro.espaco.nome,  # Adicionado
+                'canteiro': cp.canteiro.nome  # Adicionado
             })
 
     # Ordena as atividades por data

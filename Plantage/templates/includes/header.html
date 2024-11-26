@@ -4,18 +4,33 @@
     <div>
         <a class="flex items-center gap-2" href="/">
             <img class="h-16 w-16" src="{% static 'plantage.PNG' %}" alt="Logo"/>
-            <span class=" text-2xl font-bold">Plantage</span>
+            <span class="text-2xl font-bold">Plantage</span>
         </a>
     </div>
     <nav class="block relative">
         <ul class="navitems flex items-center justify-center h-full">
             {% if request.user.is_authenticated %}
             
-            <li><a href="{% url 'home' %}">Início</a></li>
+            <li>
+                <a href="{% url 'home' %}" class="flex items-center gap-2">
+                    <img src="{% static 'Home.png' %}" alt="Início" class="w-12 h-12">
+                    Início
+                </a>
+            </li>
 
-            <li><a href="{% url 'list-all' %}" class="navitems flex items-center justify-center h-full">
-                Minhas Plantas</a></li>
-            <li><a href="{% url 'calendario' %}" class="navitems flex items-center justify-center h-full">Calendário</a></li>
+            <li>
+                <a href="{% url 'list-all' %}" class="flex items-center gap-2">
+                    <img src="{% static 'Plantas.png' %}" alt="Minhas Plantas" class="w-12 h-12">
+                    Minhas Hortaliças
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'calendario' %}" class="flex items-center gap-2">
+                    <img src="{% static 'Calendário.png' %}" alt="Calendário" class="w-12 h-12">
+                    Calendário
+                </a>
+            </li>
 
             <li x-data="{ dropdownOpen: false }" class="relative">
                 <a @click="dropdownOpen = !dropdownOpen" @click.away="dropdownOpen = false" class="cursor-pointer select-none">

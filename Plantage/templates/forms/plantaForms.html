@@ -1,88 +1,102 @@
-{% extends 'layouts/blank.html' %}
+{% extends 'layouts/blank.html' %}{% block content %}
 
-{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-cover bg-center">
+    <form action="{% url 'add' %}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl md:drop-shadow-2xl shadow-black w-full p-8 max-w-3xl mx-auto font-bold" autocomplete="off">
+        {% csrf_token %}
 
-    <div class="min-h-screen flex items-center justify-center bg-cover bg-center">
-        <form action="{% url 'add' %}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl md:drop-shadow-2xl shadow-black w-full p-8 max-w-3xl mx-auto font-bold" autocomplete="off">
-            {% csrf_token %}
+        <!-- Nome -->
+        <h2 class="text-black" for="nome">Nome:</h2>
+        <div>
+            <input type="text" name="nome" id="nome" placeholder="Digite o nome da planta" required class="w-full p-2 border rounded-lg mb-4">
             
-            <!-- Nome -->
-            <h2 class="text-black" for="nome">Nome:</h2>
-            <div>
-                <input type="text" name="nome" id="nome" placeholder="Digite o nome da planta" required class="w-full p-2 border rounded-lg mb-4">
-                
-                <!-- Dias para o Manejo -->
-                <h2 class="text-black" for="ciclo_de_podagem">Dias para o Manejo da planta:</h2>
-                <input type="number" id="ciclo_de_podagem" name="ciclo_de_podagem" placeholder="Digite o numero aqui" step="1" required class="w-full p-2 border rounded-lg mb-4">
+            <!-- Dias para o Manejo -->
+            <h2 class="text-black" for="ciclo_de_podagem">Dias para o Manejo da planta:</h2>
+            <input type="number" id="ciclo_de_podagem" name="ciclo_de_podagem" placeholder="Digite o numero aqui" step="1" required class="w-full p-2 border rounded-lg mb-4">
 
-                <!-- Dias para a Colheita -->
-                <h2 class="text-black" for="ciclo_de_colheita">Dias para a colheita:</h2>
-                <input type="number" id="ciclo_de_colheita" name="ciclo_de_colheita" placeholder="Digite o numero aqui" step="1" required class="w-full p-2 border rounded-lg mb-4">
+            <!-- Dias para a Colheita -->
+            <h2 class="text-black" for="ciclo_de_colheita">Dias para a colheita:</h2>
+            <input type="number" id="ciclo_de_colheita" name="ciclo_de_colheita" placeholder="Digite o numero aqui" step="1" required class="w-full p-2 border rounded-lg mb-4">
 
-                <!-- Imagem -->
-                <div class="inputdiv text-black">
-                    <h2 class="text-black" for="imagem">Imagem da Planta:</h2>
-                    <input type="file" name="imagem" id="imagem" accept="image/*" required class="w-full p-2 border rounded-lg mb-4">
-                </div>
+            <!-- Imagem -->
+            <div class="inputdiv text-black">
+                <h2 class="text-black" for="imagem">Imagem da Planta:</h2>
+                <input type="file" name="imagem" id="imagem" accept="image/*" required class="w-full p-2 border rounded-lg mb-4">
+            </div>
 
-                <!-- Necessidade de Nutrientes -->
-                <h2 class="text-black">Necessidade de Nutrientes:</h2>
-                <div id="necessidade_de_nutrientes" class="bg-white border rounded-lg p-4 flex gap-4 mb-4">
-                    <div class="option text-black bg-gray-100 p-4 rounded-lg cursor-pointer hover:bg-gray-200" data-value="Baixa">Baixa</div>
-                    <div class="option text-black bg-gray-100 p-4 rounded-lg cursor-pointer hover:bg-gray-200" data-value="Media">Média</div>
-                    <div class="option text-black bg-gray-100 p-4 rounded-lg cursor-pointer hover:bg-gray-200" data-value="Alta">Alta</div>
-                </div>
-                <input type="hidden" name="necessidade_de_nutrientes" id="necessidade_de_nutrientes_input" required>
+            <!-- Necessidade de Nutrientes -->
+            <h2 class="text-black">Necessidade de Nutrientes:</h2>
+            <div id="necessidade_de_nutrientes" class="bg-white border rounded-lg p-4 flex gap-4 mb-4">
+                <div class="option text-black bg-gray-100 p-4 rounded-lg cursor-pointer hover:bg-gray-200" data-value="Baixa">Baixa</div>
+                <div class="option text-black bg-gray-100 p-4 rounded-lg cursor-pointer hover:bg-gray-200" data-value="Media">Média</div>
+                <div class="option text-black bg-gray-100 p-4 rounded-lg cursor-pointer hover:bg-gray-200" data-value="Alta">Alta</div>
+            </div>
+            <input type="hidden" name="necessidade_de_nutrientes" id="necessidade_de_nutrientes_input" required>
 
-                <!-- Plantas Inimigas -->
-                <h2 class="text-black mb-4">Selecione as Plantas Inimigas:</h2>
-                <div class="mb-4">
+            <!-- Plantas Inimigas -->
+            <h2 class="text-black mb-4">Selecione as Plantas Inimigas:</h2>
+            <div class="mb-4">
+                <label class="flex items-center space-x-2 bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-200">
+                    <input type="checkbox" id="no_enemies" class="form-checkbox h-5 w-5 text-indigo-600">
+                    <span class="text-black">Não existe plantas inimigas</span>
+                </label>
+            </div>
+
+            <!-- Lista de plantas inimigas -->
+            <div class="grid grid-cols-2 gap-4" id="enemy_plants_list">
+                {% for planta in plantas %}
                     <label class="flex items-center space-x-2 bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-200">
-                        <input type="checkbox" id="no_enemies" class="form-checkbox h-5 w-5 text-indigo-600">
-                        <span class="text-black">Não existe plantas inimigas</span>
+                        <input type="checkbox" name="plantas_inimigas" value="{{ planta.id }}" class="form-checkbox h-5 w-5 text-indigo-600 enemy-checkbox">
+                        <span class="text-black">{{ planta.nome }}</span>
                     </label>
-                </div>
-
-                <!-- Lista de plantas inimigas -->
-                <div class="grid grid-cols-2 gap-4" id="enemy_plants_list">
-                    {% for planta in plantas %}
-                        <label class="flex items-center space-x-2 bg-gray-100 p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-200">
-                            <input type="checkbox" name="plantas_inimigas" value="{{ planta.id }}" class="form-checkbox h-5 w-5 text-indigo-600 enemy-checkbox">
-                            <span class="text-black">{{ planta.nome }}</span>
-                        </label>
-                    {% endfor %}
-                </div>
+                {% endfor %}
             </div>
-            <br>
+        </div>
+        <br>
 
-            <!-- Botão de envio -->
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Enviar</button>
-            </div>
-        </form>
-    </div>
+        <!-- Botão de envio -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Enviar</button>
+        </div>
+    </form>
+</div>
 
-    <script>
-        // Captura a checkbox de "não existe plantas inimigas"
-        const noEnemiesCheckbox = document.getElementById('no_enemies');
-        const enemyCheckboxes = document.querySelectorAll('.enemy-checkbox');
+<script>
+    const options = document.querySelectorAll('.option');
+    const hiddenInput = document.getElementById('necessidade_de_nutrientes_input');
 
-        // Função para habilitar/desabilitar checkboxes de inimigos
-        noEnemiesCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                // Desmarca e desabilita todas as outras checkboxes
-                enemyCheckboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                    checkbox.disabled = true;
-                });
-            } else {
-                // Habilita todas as outras checkboxes
-                enemyCheckboxes.forEach(checkbox => {
-                    checkbox.disabled = false;
-                });
-            }
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove green background from all options
+            options.forEach(opt => opt.classList.remove('bg-green-500', 'text-white'));
+
+            // Add green background to the selected option
+            this.classList.add('bg-green-500', 'text-white');
+
+            // Set the hidden input's value
+            hiddenInput.value = this.getAttribute('data-value');
         });
-    </script>
+    });
+
+    // Captura a checkbox de "não existe plantas inimigas"
+    const noEnemiesCheckbox = document.getElementById('no_enemies');
+    const enemyCheckboxes = document.querySelectorAll('.enemy-checkbox');
+
+    // Função para habilitar/desabilitar checkboxes de inimigos
+    noEnemiesCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            // Desmarca e desabilita todas as outras checkboxes
+            enemyCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.disabled = true;
+            });
+        } else {
+            // Habilita todas as outras checkboxes
+            enemyCheckboxes.forEach(checkbox => {
+                checkbox.disabled = false;
+            });
+        }
+    });
+</script>
 
 {% endblock %}
 
