@@ -154,7 +154,7 @@ USE_TZ = True
 
 STATIC_URL = os.environ.get('DJANGO_STATIC_URL', "/static/")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = '/home/site/wwwroot/staticfiles'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
