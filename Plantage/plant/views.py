@@ -68,7 +68,7 @@ class AddPlanta(View):
             plantas_inimigas = Planta.objects.filter(id__in=plantas_inimigas_ids, user=user_profile)
             planta.plantas_inimigas.add(*plantas_inimigas)
 
-        return redirect('home')
+        return redirect('list-all')
 
 @method_decorator(login_required, name='dispatch')
 class AddEspaco(View):
