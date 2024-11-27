@@ -68,6 +68,16 @@
     </ul>
 </details>
 
+<details>
+<summary>Sprint 02</summary>
+<ul>
+    
+#### Ciência da Computação:
+- [Relatório Pair Programming](https://docs.google.com/document/d/13lTFkkxNb2LRRcxiN2yygLyja0tiYdPuprTWsTDBbfw/edit?usp=sharing)
+
+</ul>
+</details>
+
 <br>
 
 ## ⛓️‍💥Google Site:
