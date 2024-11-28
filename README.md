@@ -11,14 +11,14 @@
 <br>
 -Atualização de Manejo e Colheita: Monitoramento contínuo das práticas de manejo e colheita.
 <br>
--Visualização da previsão do tempo
 
-### Prioridade 2:
+### Possíveis Funcionalidades Extras:
+-Visualização da previsão do tempo
+<br>
 -Relatórios e Ajustes de Colheita: Geração de relatórios para ajustes nas práticas de colheita.
 <br>
 -Planejamento de Podas de Acordo com a Lua: Estruturação das podas baseadas nas fases da lua.
-
-### Possíveis Funcionalidades Extras:
+<br>
 -Percentual de Perda nas Colheitas: Cálculo e análise das perdas ocorridas durante a colheita.
 <br>
 -Rotação de Culturas e Técnicas Regenerativas de Reflorestamento: Implementação de práticas que promovem a saúde do solo e a biodiversidade.
@@ -72,8 +72,11 @@
 <summary>Sprint 02</summary>
 <ul>
     
-#### Ciência da Computação:
+####  Ciência da Computação:
 - [Relatório Pair Programming](https://docs.google.com/document/d/13lTFkkxNb2LRRcxiN2yygLyja0tiYdPuprTWsTDBbfw/edit?usp=sharing)
+- [ScreenCast - Histórias, CI/CD e Testes E2E](https://drive.google.com/file/d/1qifT3193haEBAb6SJuN4znY475pyF5Hf/view?usp=sharing)
+- [Website Azure Plants](https://plantage--projetos-2.azurewebsites.net/)
+- [Bug Tracking](https://docs.google.com/spreadsheets/d/1_vLIbVgqCZd77HUHSUIrtH9V1vPqc_FbXZ01pbly9EE/edit?usp=sharing)
 
 </ul>
 </details>
@@ -89,7 +92,7 @@
 #### Ciência da Computação:
 
 - **Antônio Paes** - <a href="mailto:ajpaj@cesar.school">📧</a> - <a href="https://www.linkedin.com/in/ant%C3%B4niopaess/"><img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="20"></a>
-- **Caio Almeida** - <a href="mailto:caa@cesar.school">📧</a> 
+- **Caio Almeida** - <a href="mailto:caa@cesar.school">📧</a> - <a href="https://www.linkedin.com/in/matheus-de-lucena-henriques-283098331/"><img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="20"></a>
 - **Matheus Lucena** - <a href="mailto:mlh@cesar.school">📧</a> 
 - **Marco Maciel** - <a href="mailto:magm@cesar.school">📧</a> - <a href="https://www.linkedin.com/in/marcomaciel2210/"><img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="20"></a>
 - **Clara Neves** - <a href="mailto:mcsan@cesar.school">📧</a> - <a href="https://www.linkedin.com/in/claranevess/"><img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" width="20"></a>
