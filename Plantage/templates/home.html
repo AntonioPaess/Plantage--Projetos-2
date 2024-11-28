@@ -271,12 +271,7 @@
                 'quantidade': quantidade
             })
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
                 // Oculta elementos antes do refresh
@@ -289,13 +284,12 @@
                 // Recarrega a página para mostrar a mensagem de sucesso
                 window.location.reload();
             } else {
-                console.log('Erro ao adicionar planta');
-                alert('Erro ao adicionar planta: ' + data.error);
+                alert(data.error);  // Mostra a mensagem específica do erro
             }
         })
         .catch(error => {
             console.error('Erro:', error);
-            alert('Erro ao processar a requisição. Verifique os logs do servidor.');
+            alert(data.error || 'Erro ao adicionar planta');
         });
     }
 
