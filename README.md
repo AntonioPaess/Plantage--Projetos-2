@@ -6,7 +6,7 @@
 
 ## Funcionalidades
 
-### Prioridade 1:
+### Prioridades:
 -Planejamento Agrícola e Colheita: Organização e programação das atividades de plantio e colheita.
 <br>
 -Atualização de Manejo e Colheita: Monitoramento contínuo das práticas de manejo e colheita.
