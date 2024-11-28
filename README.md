@@ -81,7 +81,9 @@
 
 
 
+### Design:
 
+- [Protótipo de Média Fidelidade](https://www.figma.com/design/8TGlwi3GUwyDZCYrmoVwlM/Plantage-2?node-id=486-1988&t=oZwMtlvtMctoUQe5-1)  
 
 </ul>
 </details>
